@@ -61,15 +61,17 @@ resource "libvirt_domain" "proxy" {
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
 
   network_interface {
-  [
     hostname = "proxy-${count.index}"
+    addresses = ["10.0.100.1${count.index}"]
     network_id = "${libvirt_network.vm_nat.id}"
     wait_for_lease = true
-  , 
+  } 
+
+  network_interface {
     hostname = "proxy-${count.index}"
+    addresses = ["10.0.200.1${count.index}"]
     network_id = "${libvirt_network.vm_private.id}"
     wait_for_lease = true
-  ]
   }
 
   console {
@@ -105,6 +107,7 @@ resource "libvirt_domain" "master" {
 
   network_interface {
     hostname = "master-${count.index}"
+    addresses = ["10.0.200.2${count.index}"]
     network_id = "${libvirt_network.vm_private.id}"
     wait_for_lease = true
   }
@@ -132,6 +135,6 @@ resource "libvirt_domain" "master" {
   }
 }
 
-output "ip" {
-  value = "${formatlist("%v: %v", libvirt_domain.proxy.*.name, libvirt_domain.proxy.*.network_interface.0.addresses.0)}"
-}
+#output "ip" {
+#  value = "${formatlist("%v: %v", libvirt_domain.proxy.*.name, libvirt_domain.proxy.*.network_interface.0.addresses.0)}"
+#}
