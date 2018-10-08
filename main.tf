@@ -15,10 +15,26 @@ resource "libvirt_volume" "proxy" {
   count = 2
 }
 
+resource "libvirt_volume" "master" {
+  name = "master_${count.index}.qcow2"
+  pool = "images"
+  base_volume_id = "${libvirt_volume.ubuntu_base.id}"
+  count = 3
+}
+
 resource "libvirt_network" "vm_nat" {
   name = "vm_nat"
   mode = "nat"
   addresses = ["10.0.100.0/24"]
+  dhcp {
+    enabled = true
+  }
+}
+
+resource "libvirt_network" "vm_private" {
+  name = "vm_private"
+  mode = "none"
+  addresses = ["10.0.200.0/24"]
   dhcp {
     enabled = true
   }
@@ -45,9 +61,15 @@ resource "libvirt_domain" "proxy" {
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
 
   network_interface {
+  [
     hostname = "proxy-${count.index}"
     network_id = "${libvirt_network.vm_nat.id}"
     wait_for_lease = true
+  , 
+    hostname = "proxy-${count.index}"
+    network_id = "${libvirt_network.vm_private.id}"
+    wait_for_lease = true
+  ]
   }
 
   console {
@@ -64,6 +86,43 @@ resource "libvirt_domain" "proxy" {
 
   disk {
     volume_id = "${libvirt_volume.proxy.*.id[count.index]}"
+  }
+
+  graphics {
+    type = "spice"
+    listen_type = "address"
+    autoport = "true"
+  }
+}
+
+resource "libvirt_domain" "master" {
+  name = "master_${count.index}"
+  memory = "2048"
+  vcpu = 2
+  count = 3
+
+  cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
+
+  network_interface {
+    hostname = "master-${count.index}"
+    network_id = "${libvirt_network.vm_private.id}"
+    wait_for_lease = true
+  }
+
+  console {
+    type = "pty"
+    target_port = "0"
+    target_type = "serial"
+  }
+
+  console {
+    type = "pty"
+    target_port = "1"
+    target_type = "virtio"
+  }
+
+  disk {
+    volume_id = "${libvirt_volume.master.*.id[count.index]}"
   }
 
   graphics {
