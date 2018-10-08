@@ -5,7 +5,8 @@ provider "libvirt" {
 resource "libvirt_volume" "ubuntu_base" {
   name = "ubuntu_base"
   pool = "images"
-  source = "https://cloud-images.ubuntu.com/releases/bionic/release/ubuntu-18.04-server-cloudimg-amd64.img"
+  #source = "https://cloud-images.ubuntu.com/releases/bionic/release/ubuntu-18.04-server-cloudimg-amd64.img"
+  source = "/home/gabor/Downloads/ubuntu-18.04-server-cloudimg-amd64.img"
 }
 
 resource "libvirt_volume" "proxy" {
