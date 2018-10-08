@@ -27,18 +27,12 @@ resource "libvirt_network" "vm_nat" {
   name = "vm_nat"
   mode = "nat"
   addresses = ["10.0.100.0/24"]
-  dhcp {
-    enabled = true
-  }
 }
 
 resource "libvirt_network" "vm_private" {
   name = "vm_private"
   mode = "none"
   addresses = ["10.0.200.0/24"]
-  dhcp {
-    enabled = true
-  }
 }
 
 resource "libvirt_cloudinit_disk" "commoninit" {
