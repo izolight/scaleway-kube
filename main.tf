@@ -38,12 +38,12 @@ module "proxy" {
   base_image = "${libvirt_volume.ubuntu_base.id}"
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
   nat = "${libvirt_network.vm_nat.id}"
-  net = "${libvirt_network.vm_private}"
+  net = "${libvirt_network.vm_private.id}"
 }
 /*
 module "master" {
   source = "./modules/master"
   base_image = "${libvirt_volume.ubuntu_base.id}"
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
-  net = "${libvirt_network.vm_private}"
+  net = "${libvirt_network.vm_private.id}"
 } */
