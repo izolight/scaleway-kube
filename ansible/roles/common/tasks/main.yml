@@ -5,7 +5,29 @@
     regexp: '^#?DNS='
     line: 'DNS=1.1.1.1'
 
-- name: Restart DNS
-  systemd:
-    name: systemd-resolved
-    state: restarted
+- name: Install necessary packages
+  apt:
+    name:
+      - build-essential
+      - libmnl-dev
+      - libelf-dev
+      - pkg-config
+      - "linux-headers-{{ ansible_kernel }}"
+    state: latest
+    update_cache: yes
+
+- name: Create source dir
+  file:
+    path: /tmp/sources
+    mode: 0600
+    state: directory
+
+- name: Extract sources
+  unarchive:
+    src: "https://git.zx2c4.com/WireGuard/snapshot/WireGuard-{{ WIREGUARD_VERSION }}.tar.xz"
+    dest: /tmp/sources
+    remote_src: yes
+
+- name: Compile WireGuard
+  make:
+    chdir: "/tmp/sources/WireGuard-{{ WIREGUARD_VERSION }}/src/"

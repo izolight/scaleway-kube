@@ -1,16 +1,12 @@
 ---
-- hosts: all
-  roles:
-    - { role: common }
-
 - hosts: proxies
   roles:
     - { role: router, tags: ["router"] }
 
 - hosts: masters
   roles:
-    - { role: natted }
+    - { role: natted, tags: ["router"] }
 
 - hosts: all
   roles:
-    - { role: wireguard-setup }
+    - { role: common, tags: ["initial"] }
