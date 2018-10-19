@@ -21,14 +21,14 @@ resource "libvirt_domain" "proxy" {
   network_interface {
     hostname = "proxy-${count.index}"
     addresses = ["10.0.100.1${count.index}"]
-    network_id = "${var.nat}"
+    network_name = "${var.nat}"
     wait_for_lease = true
   } 
 
   network_interface {
     hostname = "proxy-${count.index}"
     addresses = ["10.0.200.1${count.index}"]
-    network_id = "${var.net}"
+    network_name = "${var.net}"
     wait_for_lease = true
   }
 

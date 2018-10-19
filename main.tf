@@ -21,29 +21,17 @@ resource "libvirt_cloudinit_disk" "commoninit" {
   EOF
 }
 
-resource "libvirt_network" "vm_nat" {
-  name = "vm_nat"
-  mode = "nat"
-  addresses = ["10.0.100.0/24"]
-}
-
-resource "libvirt_network" "vm_private" {
-  name = "vm_private"
-  mode = "none"
-  addresses = ["10.0.200.0/24"]
-}
-
 module "proxy" {
   source = "./modules/proxy"
   base_image = "${libvirt_volume.ubuntu_base.id}"
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
-  nat = "${libvirt_network.vm_nat.id}"
-  net = "${libvirt_network.vm_private.id}"
+  nat = "vm_nat"
+  net = "vm_private"
 }
 /*
 module "master" {
   source = "./modules/master"
   base_image = "${libvirt_volume.ubuntu_base.id}"
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
-  net = "${libvirt_network.vm_private.id}"
+  net = "vm_private"
 } */
