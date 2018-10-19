@@ -28,10 +28,10 @@ module "proxy" {
   nat = "vm_nat"
   net = "vm_private"
 }
-/*
+
 module "master" {
   source = "./modules/master"
   base_image = "${libvirt_volume.ubuntu_base.id}"
   cloudinit = "${libvirt_cloudinit_disk.commoninit.id}"
   net = "vm_private"
-} */
+}

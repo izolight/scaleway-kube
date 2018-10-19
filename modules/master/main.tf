@@ -19,7 +19,6 @@ resource "libvirt_domain" "master" {
 
   network_interface {
     hostname = "master-${count.index}"
-    addresses = ["10.0.200.2${count.index}"]
     network_name = "${var.net}"
     wait_for_lease = true
   }
