@@ -2,3 +2,7 @@
 - hosts: proxies
   roles:
     - { role: router, tags: ["router"] }
+
+- hosts: all
+  roles:
+    - { role: wireguard-setup }

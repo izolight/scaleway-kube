@@ -1,0 +1,23 @@
+---
+- name: Get wireguard source
+  local_action:
+    module: get_url
+    url: "https://git.zx2c4.com/WireGuard/snapshot/WireGuard-{{ WIREGUARD_VERSION }}.tar.xz"
+    dest: ./roles/wireguard-setup/files/WireGuard.tar.xz
+  run_once: true
+
+- name: Remove source dir, so we have a clean state
+  file:
+    path: /tmp/sources
+    state: absent
+
+- name: Create source dir
+  file:
+    path: /tmp/sources
+    mode: 0600
+    state: directory
+
+- name: upload wireguard source to hosts
+  unarchive:
+    src: WireGuard.tar.xz
+    dest: /tmp/sources
