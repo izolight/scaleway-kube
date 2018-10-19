@@ -1,17 +1,12 @@
 ---
-- name: generate public key
-  shell: "echo {{ PROXY_PRIVATE_KEY }} | wg pubkey"
-  register: PROXY_PUBLIC_KEY
-
-- name: set fact for public key
-  set_fact:
-    PROXY_PUBLIC_KEY: "{{ PROXY_PUBLIC_KEY.stdout }}"
-
-- debug: var=PROXY_PUBLIC_KEY
-
-- name: generate keypairs for clients
+- name: generate keypairs
   shell: 'umask 077; wg genkey | tee privatekey | wg pubkey > publickey'
   args:
     chdir: /etc/wireguard
     creates: privatekey
-  when: "'proxies' not in group_names"
+
+- name: get public keys
+  fetch:
+    src: /etc/wireguard/publickey
+    dest: "./roles/wireguard/files/{{ inventory_hostname }}"
+    flat: yes
