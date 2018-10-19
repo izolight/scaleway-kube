@@ -1,0 +1,6 @@
+---
+- name: Remove current default route
+  shell: 'ip route delete default'
+
+- name: Use proxy as default route
+  shell: 'ip route add default via 10.0.200.10'
