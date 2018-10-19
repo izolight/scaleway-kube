@@ -1,0 +1,4 @@
+---
+- hosts: proxies
+  roles:
+    - { role: router, tags: ["router"] }
