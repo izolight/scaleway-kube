@@ -6,3 +6,25 @@
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: setup nat
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: ens3
+    jump: MASQUERADE
+
+- name: forward connections from lan to wan
+  iptables:
+    chain: FORWARD
+    in_interface: ens4
+    out_interface: ens3
+    jump: ACCEPT
+
+- name: forward existing connection from wan to lan
+  iptables:
+    chain: FORWARD
+    in_interface: ens3
+    out_interface: ens4
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
