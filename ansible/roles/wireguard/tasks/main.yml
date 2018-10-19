@@ -1,0 +1,10 @@
+---
+- name: generate public key
+  shell: "echo {{ PROXY_PRIVATE_KEY }} | wg pubkey"
+  register: PROXY_PUBLIC_KEY
+
+- name: set fact for public key
+  set_fact:
+    PROXY_PUBLIC_KEY: "{{ PROXY_PUBLIC_KEY.stdout }}"
+
+- debug: var=PROXY_PUBLIC_KEY
