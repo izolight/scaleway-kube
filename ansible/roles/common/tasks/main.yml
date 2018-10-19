@@ -28,6 +28,12 @@
     dest: /tmp/sources
     remote_src: yes
 
-- name: Compile WireGuard
+- name: Compile and install WireGuard
   make:
     chdir: "/tmp/sources/WireGuard-{{ WIREGUARD_VERSION }}/src/"
+    target: install
+
+- name: load WireGuard kernel module
+  modprobe:
+    name: wireguard
+    state: present
