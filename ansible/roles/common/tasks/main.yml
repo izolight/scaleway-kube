@@ -1,0 +1,11 @@
+---
+- name: Use Cloudflare DNS
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNS='
+    line: 'DNS=1.1.1.1'
+
+- name: Restart DNS
+  systemd:
+    name: systemd-resolved
+    state: restarted

@@ -1,4 +1,8 @@
 ---
+- hosts: all
+  roles:
+    - { role: common }
+
 - hosts: proxies
   roles:
     - { role: router, tags: ["router"] }
