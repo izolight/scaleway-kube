@@ -8,3 +8,10 @@
     PROXY_PUBLIC_KEY: "{{ PROXY_PUBLIC_KEY.stdout }}"
 
 - debug: var=PROXY_PUBLIC_KEY
+
+- name: generate keypairs for clients
+  shell: 'umask 077; wg genkey | tee privatekey | wg pubkey > publickey'
+  args:
+    chdir: /etc/wireguard
+    creates: privatekey
+  when: "'proxies' not in group_names"
