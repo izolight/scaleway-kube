@@ -3,4 +3,6 @@ Address = {{ VPN_SUBNET }}.{{ vpn_ip }}/32
 PrivateKey = {{ private_key.content | b64decode | trim }}
 
 [Peer]
-PublicKey =
+PublicKey = {{ hostvars[item].public_key.content | b64decode | trim }}
+AllowedIPs = 0.0.0.0/0
+Endpoint = {{ item }}:{{ VPN_PORT }}
