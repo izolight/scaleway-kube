@@ -5,7 +5,7 @@
     chdir: /etc/wireguard
     creates: privatekey
 
-- name: get public keys for proxies
+- name: get public keys for endpoints
   fetch:
     src: /etc/wireguard/publickey
     dest: "./roles/wireguard/files/endpoints/{{ inventory_hostname }}"
@@ -18,3 +18,23 @@
     dest: "./roles/wireguard/files/clients/{{ inventory_hostname }}"
     flat: yes
   when: "'proxies' not in group_names"
+
+- name: get private keys
+  shell: "cat /etc/wireguard/privatekey"
+  register: PRIVATE_KEY
+
+- name: set fact for private key
+  set_fact:
+    PRIVATE_KEY: "{{ PRIVATE_KEY.stdout }}"
+
+- name: create endpoint config
+  template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: 0600
+
+- name: create client config
+  template:
+    src: tunnel.conf.j2
+    dest: /etc/wireguard/tunnel.conf
+    mode: 0600
