@@ -1,0 +1,50 @@
+---
+- name: load needed kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: enable iptables for bridge
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+
+- name: enable ip6tables for bridge
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+
+- name: enable ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+
+- name: install dependencies
+  apt:
+    name: libseccomp2
+    update-cache: yes
+
+- name: download containerd
+  get_url:
+    url: "https://storage.googleapis.com/cri-containerd-release/cri-containerd-{{ CONTAINERD_VERSION }}.linux-amd64.tar.gz"
+    checksum: "sha256:{{ CONTAINERD_SHA256 }}"
+    dest: /tmp/
+
+- name: extract containerd
+  unarchive:
+    remote_src: yes
+    src: "/tmp/cri-containerd-{{ CONTAINERD_VERSION }}.linux-amd64.tar.gz"
+    dest: /
+    extra_opts:
+      - --no-overwrite-dir
+
+- name: start containerd
+  systemd:
+    state: started
+    name: containerd
