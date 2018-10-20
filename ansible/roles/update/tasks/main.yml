@@ -32,3 +32,7 @@
   when: old_kernel != new_kernel
   notify:
     - load WireGuard kernel module
+
+- name: remove unneeded packages
+  apt:
+    autoremove: yes
