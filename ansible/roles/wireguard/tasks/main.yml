@@ -31,3 +31,17 @@
   loop: "{{ groups['proxies'] | sort }}"
   loop_control:
     index_var: idx
+
+- name: enable wireguard endpoints
+  systemd:
+    name: wg-quick@wg0
+    state: restarted
+    daemon-reload: yes
+  when: "'proxies' in group_names"
+
+- name: enable wireguard clients
+  systemd:
+    name: wg-quick@tunnel_0
+    state: restarted
+    daemon-reload: yes
+  when: "'proxies' not in group_names"
