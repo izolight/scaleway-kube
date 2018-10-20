@@ -65,3 +65,21 @@
     src: failover-vpn.sh
     dest: /usr/local/bin/failover-vpn.sh
     mode: 0755
+  when: "'proxies' not in group_names"
+
+- name: copy service and timer unit file
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - failover-vpn.service
+    - failover-vpn.timer
+  when: "'proxies' not in group_names"
+
+- name: enable failover vpn timer
+  systemd:
+    name: failover-vpn.timer
+    state: started
+    enabled: yes
+    daemon-reload: yes
+  when: "'proxies' not in group_names"

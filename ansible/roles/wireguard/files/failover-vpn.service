@@ -1,0 +1,9 @@
+[Unit]
+Description=Checks if active vpn is working and fails over to secondary
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/failover-vpn.sh
+
+[Install]
+WantedBy=multi-user.target
