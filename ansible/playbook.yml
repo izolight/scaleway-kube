@@ -12,3 +12,7 @@
     - { role: prepare, tags: ["prepare"] }
     - { role: wireguard, tags: ["wireguard"] }
     - { role: update, tags: ["update"], serial: "30%" }
+
+- hosts: kube-hosts
+  roles:
+    - { role: cri-o, tags: ["kubernetes"] }

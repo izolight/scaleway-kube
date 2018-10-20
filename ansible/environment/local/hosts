@@ -25,6 +25,9 @@ master-2
 [clients:children]
 masters
 
+[kube-hosts:children]
+masters
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 ansible_user=root

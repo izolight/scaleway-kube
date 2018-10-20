@@ -1,0 +1,40 @@
+---
+- name: load needed kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: enable iptables for bridge
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+
+- name: enable ip6tables for bridge
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+
+- name: enable ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+
+- name: install software-properties
+  apt:
+    name: software-properties-common
+    update-cache: yes
+
+- name: add projectatomic ppa
+  apt_repository:
+    repo: ppa:projectatomic/ppa
+
+- name: install cri-o
+  apt:
+    name: cri-o-1.12
+    update-cache: yes
