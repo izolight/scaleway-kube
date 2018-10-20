@@ -8,7 +8,7 @@
 - name: get public keys for proxies
   fetch:
     src: /etc/wireguard/publickey
-    dest: "./roles/wireguard/files/proxies/{{ inventory_hostname }}"
+    dest: "./roles/wireguard/files/endpoints/{{ inventory_hostname }}"
     flat: yes
   when: "'proxies' in group_names"
 

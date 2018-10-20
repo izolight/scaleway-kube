@@ -1,4 +1,4 @@
 **
 !.gitignore
 !clients/
-!proxies/
+!endpoints/
