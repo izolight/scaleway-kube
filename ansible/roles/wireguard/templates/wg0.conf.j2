@@ -1,11 +1,12 @@
 [Interface]
-Address = 192.168.100.1/24
+Address = {{ VPN_SUBNET }}.1/24
 PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ListenPort = 54321
-PrivateKey = {{ PRIVATE_KEY }}
-{% for k in publickeys.results %}
+PrivateKey = {{ private_key.content | b64decode | trim }}
+{% for h in groups['clients'] %}
 
 [Peer]
-PublicKey = {{ k.ansible_facts.key }}
+PublicKey = {{ hostvars[h].public_key.content | b64decode | trim}}
+AllowedIPs = {{ VPN_SUBNET }}.{{ hostvars[h].vpn_ip }}/32
 {% endfor %}

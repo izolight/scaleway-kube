@@ -5,45 +5,15 @@
     chdir: /etc/wireguard
     creates: privatekey
 
-- name: get public keys for endpoints
-  fetch:
+- name: get public keys
+  slurp:
     src: /etc/wireguard/publickey
-    dest: "./roles/wireguard/files/endpoints/{{ inventory_hostname }}"
-    flat: yes
-  when: "'proxies' in group_names"
-
-- name: get public keys clients
-  fetch:
-    src: /etc/wireguard/publickey
-    dest: "./roles/wireguard/files/clients/{{ inventory_hostname }}"
-    flat: yes
-  when: "'proxies' not in group_names"
+  register: public_key
 
 - name: get private keys
-  shell: "cat /etc/wireguard/privatekey"
+  slurp:
+    src: /etc/wireguard/privatekey
   register: private_key
-
-- name: set fact for private key
-  set_fact:
-    PRIVATE_KEY: "{{ private_key.stdout }}"
-
-- local_action:
-    module: find
-    paths: "{{ playbook_dir }}/roles/wireguard/files/clients/"
-  become: false
-  register: clients
-  run_once: true
-
-- name: set facts for public keys
-  set_fact:
-    key: "{{ lookup('file', item.path) }}"
-  with_items:
-    - "{{ clients.files }}"
-  run_once: true
-  register: publickeys
-
-- debug: msg={{ publickeys }}
-  run_once: true
 
 - name: create endpoint config
   template:
@@ -51,13 +21,6 @@
     dest: /etc/wireguard/wg0.conf
     mode: 0600
   when: "'proxies' in group_names"
-
-- local_action:
-    module: find
-    paths: "{{ playbook_dir }}/roles/wireguard/files/endpoints/"
-  become: false
-  register: endpoint_keys
-  run_once: true
 
 - name: create client config
   template:
