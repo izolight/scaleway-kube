@@ -1,0 +1,39 @@
+---
+- name: install dependencies
+  apt:
+    name: apt-transport-https
+    update_cache: yes
+
+- name: add gpg key for kubernetes repo
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: install kubernetes repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+
+- name: install packages
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    update_cache: yes
+
+- name: lock package versions
+  shell: apt-mark hold kubelet kubeadm kubectl
+
+- name: set cgroup driver
+  lineinfile:
+    path: /etc/default/kubelet
+    regexp: '^KUBELET_KUBEADM_EXTRA_ARGS='
+    line: 'KUBELET_KUBEADM_EXTRA_ARGS=--cgroup-driver=cgroupfs'
+
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    daemon-reload: yes
+    state: restarted

@@ -16,4 +16,5 @@
 - hosts: kube-hosts
   roles:
     #    - { role: cri-o, tags: ["kubernetes"] }
-    - { role: containerd, tags: ["kubernetes"] }
+    - { role: containerd, tags: ["kubernetes", "runtime"] }
+    - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
