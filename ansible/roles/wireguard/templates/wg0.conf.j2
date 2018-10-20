@@ -4,6 +4,8 @@ PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEP
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ListenPort = 54321
 PrivateKey = {{ PRIVATE_KEY }}
+{% for k in publickeys.results %}
 
 [Peer]
-PublicKey =
+PublicKey = {{ k.ansible_facts.key }}
+{% endfor %}
