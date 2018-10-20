@@ -37,6 +37,7 @@
     name: wg-quick@wg0
     state: restarted
     daemon-reload: yes
+    enabled: yes
   when: "'proxies' in group_names"
 
 - name: enable wireguard clients
@@ -44,4 +45,5 @@
     name: wg-quick@tunnel_0
     state: restarted
     daemon-reload: yes
+    enabled: yes
   when: "'proxies' not in group_names"
