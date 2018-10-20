@@ -59,3 +59,9 @@
     daemon-reload: yes
     enabled: yes
   when: "'proxies' not in group_names"
+
+- name: copy failover script
+  template:
+    src: failover-vpn.sh
+    dest: /usr/local/bin/failover-vpn.sh
+    mode: 0755
