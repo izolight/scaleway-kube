@@ -5,8 +5,16 @@
     chdir: /etc/wireguard
     creates: privatekey
 
-- name: get public keys
+- name: get public keys for proxies
   fetch:
     src: /etc/wireguard/publickey
-    dest: "./roles/wireguard/files/{{ inventory_hostname }}"
+    dest: "./roles/wireguard/files/proxies/{{ inventory_hostname }}"
     flat: yes
+  when: "'proxies' in group_names"
+
+- name: get public keys clients
+  fetch:
+    src: /etc/wireguard/publickey
+    dest: "./roles/wireguard/files/clients/{{ inventory_hostname }}"
+    flat: yes
+  when: "'proxies' not in group_names"
