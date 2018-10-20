@@ -1,0 +1,23 @@
+---
+- name: override kubelet unit file
+  copy:
+    src: 20-etcd-service-manager.conf
+    dest: /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
+
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    daemon-reload: yes
+    state: restarted
+
+- name: create tmp folders
+  file:
+    path: "/tmp/{{ hostvars[item].etcd_name }}"
+    state: directory
+  loop: "{{ groups['masters'] | sort }}"
+
+- name: add kubeadm config
+  template:
+    src: kubeadmcfg.yaml
+    dest: "/tmp/{{ hostvars[item].etcd_name }}/"
+  loop: "{{ groups['masters'] | sort }}"

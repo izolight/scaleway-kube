@@ -5,13 +5,13 @@
 10.0.200.11
 
 [master-0]
-10.0.200.20 vpn_ip=10
+10.0.200.20 vpn_ip=10 etcd_name=infra0
 
 [master-1]
-10.0.200.21 vpn_ip=11
+10.0.200.21 vpn_ip=11 etcd_name=infra1
 
 [master-2]
-10.0.200.22 vpn_ip=12
+10.0.200.22 vpn_ip=12 etcd_name=infra2
 
 [proxies:children]
 proxy-0
