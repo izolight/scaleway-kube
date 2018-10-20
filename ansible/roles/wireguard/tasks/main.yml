@@ -40,6 +40,18 @@
     enabled: yes
   when: "'proxies' in group_names"
 
+- name: create override dir for service
+  file:
+    path: /etc/systemd/system/wg-quick@.service.d
+    state: directory
+  when: "'proxies' not in group_names"
+
+- name: create override config for failover
+  copy:
+    src: wg-quick-override.conf
+    dest: /etc/systemd/system/wg-quick@.service.d/override.conf
+  when: "'proxies' not in group_names"
+
 - name: enable wireguard clients
   systemd:
     name: wg-quick@tunnel_0
