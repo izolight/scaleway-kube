@@ -9,5 +9,6 @@
 
 - hosts: all
   roles:
-    - { role: common, tags: ["initial"] }
+    - { role: prepare, tags: ["prepare"] }
     - { role: wireguard, tags: ["wireguard"] }
+    - { role: update, tags: ["update"], serial: "30%" }

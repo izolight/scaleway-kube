@@ -1,0 +1,20 @@
+---
+- name: load WireGuard kernel module
+  modprobe:
+   name: wireguard
+  notify:
+    - restart WireGuard server
+
+- name: restart WireGuard server
+  systemd:
+    name: wg-quick@wg0
+    state: restarted
+  when: "'proxies' in group_names"
+  notify:
+    - restart WireGuard clients
+
+- name: restart WireGuard clients
+  systemd:
+    name: wg-quick@tunnel_0
+    state: restarted
+  when: "'proxies' not in group_names"

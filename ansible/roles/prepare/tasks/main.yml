@@ -16,21 +16,15 @@
     state: latest
     update_cache: yes
 
-- name: Create source dir
-  file:
-    path: /tmp/sources
-    mode: 0600
-    state: directory
-
 - name: Extract sources
   unarchive:
     src: "https://git.zx2c4.com/WireGuard/snapshot/WireGuard-{{ WIREGUARD_VERSION }}.tar.xz"
-    dest: /tmp/sources
+    dest: /usr/local/src
     remote_src: yes
 
 - name: Compile and install WireGuard
   make:
-    chdir: "/tmp/sources/WireGuard-{{ WIREGUARD_VERSION }}/src/"
+    chdir: "/usr/local/src/WireGuard-{{ WIREGUARD_VERSION }}/src/"
     target: install
 
 - name: load WireGuard kernel module
