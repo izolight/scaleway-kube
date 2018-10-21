@@ -45,3 +45,8 @@
     dest: /etc/kubernetes/pki/
   delegate_to: "{{ groups['etcd_ca'][0] }}"
   when: inventory_hostname in groups['etcd_noca']
+
+- name: create server cert
+  shell: kubeadm alpha phase certs etcd-server --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/server.crt
