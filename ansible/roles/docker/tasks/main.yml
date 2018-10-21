@@ -1,4 +1,14 @@
 ---
+- name: create docker service directory
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: copy service override for docker
+  copy:
+    src: 10-docker-opts.conf
+    dest: /etc/systemd/system/docker.service.d
+
 - name: install docker
   apt:
     name:
@@ -10,16 +20,6 @@
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
-
-- name: create docker service directory
-  file:
-    path: /etc/systemd/system/docker.service.d
-    state: directory
-
-- name: copy service override for docker
-  copy:
-    src: 10-docker-opts.conf
-    dest: /etc/systemd/system/docker.service.d
 
 - name: restart docker
   systemd:
