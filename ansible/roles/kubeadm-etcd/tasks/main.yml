@@ -63,3 +63,8 @@
     - { command: 'etcd-peer', file: '/etcd/peer.crt' }
     - { command: 'etcd-healthcheck-client', file: '/etcd/healthcheck-client.crt' }
     - { command: 'apiserver-etcd-client', file: 'apiserver-etcd-client.crt' }
+
+- name: create etcd manifest
+  shell: kubeadm alpha phase etcd local --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/manifests/etcd.yaml
