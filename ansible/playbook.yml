@@ -15,8 +15,9 @@
 
 - hosts: kube-hosts
   roles:
-    #    - { role: cri-o, tags: ["kubernetes"] } # choose either cri-o or containerd
-    - { role: containerd, tags: ["kubernetes", "runtime"] }
+#    - { role: cri-o, tags: ["kubernetes"] } # choose either cri-o or containerd or docker
+    - { role: docker, tags: ["kubernetes", "runtime"] }
+#    - { role: containerd, tags: ["kubernetes", "runtime"] }
     - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
 
 - hosts: etcd

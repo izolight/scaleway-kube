@@ -1,0 +1,21 @@
+---
+- name: install docker
+  apt:
+    name: docker.io
+    update-cache: yes
+
+- name: set up docker daemon
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: create docker service directory
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: restart docker
+  systemd:
+    name: docker
+    state: restarted
+    daemon-reload: yes
