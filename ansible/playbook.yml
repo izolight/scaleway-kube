@@ -22,4 +22,4 @@
 
 - hosts: etcd
   roles:
-    - { role: kubeadm-etcd, tags: ["kubernetes", "etcd"] } # use this if doing a external etcd cluster
+    - { role: etcd, tags: ["kubernetes", "etcd"] } # use this if doing a external etcd cluster
