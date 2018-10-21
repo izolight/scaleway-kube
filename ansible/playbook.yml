@@ -18,4 +18,7 @@
     #    - { role: cri-o, tags: ["kubernetes"] }
     - { role: containerd, tags: ["kubernetes", "runtime"] }
     - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
+
+- hosts: etcd
+  roles:
     - { role: kubeadm-etcd, tags: ["kubernetes", "etcd"] }
