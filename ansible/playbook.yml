@@ -15,10 +15,10 @@
 
 - hosts: kube-hosts
   roles:
-    #    - { role: cri-o, tags: ["kubernetes"] }
+    #    - { role: cri-o, tags: ["kubernetes"] } # choose either cri-o or containerd
     - { role: containerd, tags: ["kubernetes", "runtime"] }
     - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
 
 - hosts: etcd
   roles:
-    - { role: kubeadm-etcd, tags: ["kubernetes", "etcd"] }
+    #    - { role: kubeadm-etcd, tags: ["kubernetes", "etcd"] } # use this if doing a external etcd cluster
