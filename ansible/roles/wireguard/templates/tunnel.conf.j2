@@ -1,5 +1,6 @@
 [Interface]
 Address = {{ VPN_SUBNET }}.{{ vpn_ip }}/32
+ListenPort = {{ VPN_PORT }}
 PrivateKey = {{ private_key.content | b64decode | trim }}
 
 [Peer]

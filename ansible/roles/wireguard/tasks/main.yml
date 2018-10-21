@@ -32,6 +32,22 @@
   loop_control:
     index_var: idx
 
+- name: add incoming firewall rules
+  iptables:
+    action: insert
+    chain: INPUT
+    protocol: udp
+    destination_port: 54321
+    jump: ACCEPT
+
+- name: add outgoing firewall rules
+  iptables:
+    action: insert
+    chain: OUTPUT
+    protocol: udp
+    destination_port: 54321
+    jump: ACCEPT
+
 - name: enable wireguard endpoints
   systemd:
     name: wg-quick@wg0
