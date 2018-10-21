@@ -10,14 +10,7 @@
     daemon-reload: yes
     state: restarted
 
-- name: create tmp folders
-  file:
-    path: "/tmp/{{ hostvars[item].etcd_name }}"
-    state: directory
-  loop: "{{ groups['masters'] | sort }}"
-
 - name: add kubeadm config
   template:
     src: kubeadmcfg.yaml
-    dest: "/tmp/{{ hostvars[item].etcd_name }}/"
-  loop: "{{ groups['masters'] | sort }}"
+    dest: /tmp/

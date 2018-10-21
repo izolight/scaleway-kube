@@ -3,15 +3,15 @@ kind: ClusterConfiguration
 etcd:
   local:
     serverCertSANs:
-    - "{{ hostvars[item].ansible_default_ipv4.address }}"
+    - "{{ ansible_default_ipv4.address }}"
     peerCertSANs:
-    - "{{ hostvars[item].ansible_default_ipv4.address }}"
+    - "{{ ansible_default_ipv4.address }}"
     extraArgs:
-      initial-cluster: {% for h in groups['masters'] | sort %}{{ hostvars[h].etcd_name }}=https://{{ hostvars[h].ansible_default_ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}
+      initial-cluster: {% for h in groups['etcd'] | sort %}{{ hostvars[h].ansible_hostname }}=https://{{ hostvars[h].ansible_default_ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}
 
       initial-cluster-state: new
-      name: {{ hostvars[item].etcd_name }}
-      listen-peer-urls: https://{{ hostvars[item].ansible_default_ipv4.address }}:2380
-      listen-client-urls: https://{{ hostvars[item].ansible_default_ipv4.address }}:2379
-      advertise-client-urls: https://{{ hostvars[item].ansible_default_ipv4.address }}:2379
-      initial-advertise-peer-urls: https://{{ hostvars[item].ansible_default_ipv4.address }}:2380
+      name: {{ ansible_hostname }}
+      listen-peer-urls: https://{{ ansible_default_ipv4.address }}:2380
+      listen-client-urls: https://{{ ansible_default_ipv4.address }}:2379
+      advertise-client-urls: https://{{ ansible_default_ipv4.address }}:2379
+      initial-advertise-peer-urls: https://{{ ansible_default_ipv4.address }}:2380
