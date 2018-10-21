@@ -68,3 +68,19 @@
   shell: kubeadm alpha phase etcd local --config=/tmp/kubeadmcfg.yaml
   args:
     creates: /etc/kubernetes/manifests/etcd.yaml
+
+- name: start etcd
+  docker_container:
+    name: etcd-test
+    image: quay.io/coreos/etcd:v3.2.18
+    auto_remove: yes
+    detach: no
+    interactive: yes
+    entrypoint: |
+      etcdctl --cert-file /etc/kubernetes/pki/etcd/peer.crt
+      --key-file /etc/kubernetes/pki/etcd/peer.key
+      --ca-file /etc/kubernetes/pki/etcd/ca.crt
+      --endpoints https://{{ groups['etcd_ca'][0] }}:2379 cluster-health
+    volumes:
+      - /etc/kubernetes:/etc/kubernetes
+    network_mode: host
