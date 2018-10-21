@@ -1,7 +1,9 @@
 ---
 - name: install docker
   apt:
-    name: docker.io
+    name:
+      - docker.io
+      - python3-docker
     update-cache: yes
 
 - name: set up docker daemon
