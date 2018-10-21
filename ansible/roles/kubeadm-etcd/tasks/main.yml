@@ -41,7 +41,7 @@
 
 - name: copy ca to other hosts
   synchronize:
-    src: /copy/from_serverA
-    dest: /copy/to_serverB
+    src: /etc/kubernetes/pki/etcd
+    dest: /etc/kubernetes/pki/
   delegate_to: "{{ groups['etcd_ca'][0] }}"
   when: inventory_hostname in groups['etcd_noca']
