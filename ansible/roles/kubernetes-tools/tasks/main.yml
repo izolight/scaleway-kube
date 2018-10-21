@@ -33,6 +33,11 @@
     line: 'KUBELET_KUBEADM_EXTRA_ARGS=--cgroup-driver=cgroupfs'
   when: CONTAINER_RUNTIME != 'docker'
 
+- name: preserve firewall rules
+  copy:
+    src: 30-wireguard-iptables.conf
+    dest: /etc/systemd/system/kubelet.service.d/
+
 - name: restart kubelet
   systemd:
     name: kubelet
