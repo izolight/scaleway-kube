@@ -14,3 +14,16 @@
   template:
     src: kubeadmcfg.yaml
     dest: /tmp/
+
+- name: generate etcd ca
+  shell: kubeadm alpha phase certs etcd-ca
+  args:
+    creates: /etc/kubernetes/pki/etcd/ca.crt
+  when: inventory_hostname in groups['etcd_ca']
+
+- name: copy ca to other hosts
+  synchronize:
+    src: /copy/from_serverA
+    dest: /copy/to_serverB
+  delegate_to: etcd_ca
+  when: inventory_hostname in groups['etcd_noca']
