@@ -16,6 +16,11 @@
     path: /etc/systemd/system/docker.service.d
     state: directory
 
+- name: copy service override for docker
+  copy:
+    src: 10-docker-opts.conf
+    dest: /etc/systemd/system/docker.service.d
+
 - name: restart docker
   systemd:
     name: docker
