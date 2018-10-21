@@ -39,14 +39,27 @@
     key: "{{ ssh_public_key.content | b64decode }}" 
   when: inventory_hostname in groups['etcd_noca']
 
+- name: make sure etcd pki dir exists
+  file:
+    path: /etc/kubernetes/pki/etcd/
+    state: directory
+
 - name: copy ca to other hosts
   synchronize:
-    src: /etc/kubernetes/pki/etcd
-    dest: /etc/kubernetes/pki/
+    src: "/etc/kubernetes/pki/etcd/{{ item }}"
+    dest: "/etc/kubernetes/pki/etcd/{{ item }}"
+  loop:
+    - ca.crt
+    - ca.key
   delegate_to: "{{ groups['etcd_ca'][0] }}"
   when: inventory_hostname in groups['etcd_noca']
 
-- name: create server cert
-  shell: kubeadm alpha phase certs etcd-server --config=/tmp/kubeadmcfg.yaml
+- name: create certs
+  shell: "kubeadm alpha phase certs {{ item.command}} --config=/tmp/kubeadmcfg.yaml"
   args:
-    creates: /etc/kubernetes/pki/etcd/server.crt
+    creates: "/etc/kubernetes/pki/{{ item.file }}"
+  loop:
+    - { command: 'etcd-server', file: '/etcd/server.crt' }
+    - { command: 'etcd-peer', file: '/etcd/peer.crt' }
+    - { command: 'etcd-healthcheck-client', file: '/etcd/healthcheck-client.crt' }
+    - { command: 'apiserver-etcd-client', file: 'apiserver-etcd-client.crt' }
