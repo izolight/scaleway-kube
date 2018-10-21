@@ -31,6 +31,7 @@
     path: /etc/default/kubelet
     regexp: '^KUBELET_KUBEADM_EXTRA_ARGS='
     line: 'KUBELET_KUBEADM_EXTRA_ARGS=--cgroup-driver=cgroupfs'
+  when: CONTAINER_RUNTIME != 'docker'
 
 - name: restart kubelet
   systemd:
