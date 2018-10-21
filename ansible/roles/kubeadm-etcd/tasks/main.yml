@@ -73,9 +73,8 @@
   docker_container:
     name: etcd-test
     image: quay.io/coreos/etcd:v3.2.18
-    auto_remove: yes
+    cleanup: yes
     detach: no
-    interactive: yes
     entrypoint: |
       etcdctl --cert-file /etc/kubernetes/pki/etcd/peer.crt
       --key-file /etc/kubernetes/pki/etcd/peer.key
@@ -84,3 +83,7 @@
     volumes:
       - /etc/kubernetes:/etc/kubernetes
     network_mode: host
+  register: etcd_test
+
+- debug:
+    msg: "{{ etcd_test.ansible_facts.docker_container.Output.split('\n') }}"
