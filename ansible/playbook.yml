@@ -24,3 +24,7 @@
 - hosts: etcd
   roles:
     - { role: etcd, tags: ["kubernetes", "etcd"] } # use this if doing a external etcd cluster
+
+- hosts: proxies
+  roles:
+    - { role: haproxy, tags: ["haproxy"] }
