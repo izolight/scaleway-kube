@@ -1,0 +1,5 @@
+---
+- name: copy kubeadm config
+  template:
+    src: kubeadm-config.yaml
+    dest: /tmp/

@@ -20,10 +20,11 @@
     - { role: docker, when: CONTAINER_RUNTIME == 'docker', tags: ["kubernetes", "runtime"] }
     - { role: containerd, when: CONTAINER_RUNTIME == 'containerd', tags: ["kubernetes", "runtime"] }
     - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
+    - { role: kubeadm, tags: ["kubernetes", "kubeadmn"] }
 
 - hosts: etcd
   roles:
-    - { role: etcd, tags: ["kubernetes", "etcd"] } # use this if doing a external etcd cluster
+    - { role: etcd, tags: ["etcd"] } # use this if doing a external etcd cluster
 
 - hosts: proxies
   roles:
