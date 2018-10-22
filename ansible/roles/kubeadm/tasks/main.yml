@@ -36,25 +36,25 @@
   delegate_to: "{{ groups['master-0'][0] }}"
   when: inventory_hostname not in groups['master-0']
 
-- name: generate etcd certs on master-1
+- name: generate etcd certs on second node
   shell: kubeadm alpha phase certs all --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/pki/etcd/server.crt
   when: inventory_hostname in groups['master-1']
 
-- name: generate kubelet config on master-1
+- name: generate kubelet config on second node
   shell: kubeadm alpha phase kubelet config write-to-disk --config /tmp/kubeadm-config.yaml
   args:
     creates: /var/lib/kubelet/config.yaml
   when: inventory_hostname in groups['master-1']
 
-- name: generate kubelet env on master-1
+- name: generate kubelet env on second node
   shell: kubeadm alpha phase kubelet write-env-file --config /tmp/kubeadm-config.yaml
   args:
     creates: /var/lib/kubelet/kubeadm-flags.env
   when: inventory_hostname in groups['master-1']
 
-- name: generate kubelet kubeconfig on master-1
+- name: generate kubelet kubeconfig on second node
   shell: kubeadm alpha phase kubeconfig kubelet --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/kubelet.conf
@@ -65,3 +65,94 @@
     name: kubelet
     state: restarted
   when: inventory_hostname in groups['master-1']
+
+- name: add etcd to cluster
+  shell: "kubectl exec -n kube-system etcd-{{ hostvars[groups['master-0']].ansible_hostname }} -- etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --endpoints=https://{{ hostvars[groups['master-0']].ansible_ens3.ipv4.address }}:2379 member add {{ ansible_hostname }} https://{{ ansible_ens3.ipv4.address }}:2380"
+  when: inventory_hostname in groups['master-1']
+
+- name: write etcd manifest
+  shell: kubeadm alpha phase etcd local --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/manifests/etcd.yaml
+  when: inventory_hostname in groups['master-1']
+
+- name: write controlplane configs
+  shell: kubeadm alpha phase kubeconfig all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/controller-manager.conf
+  when: inventory_hostname in groups['master-1']
+
+- name: write controlplane manifests
+  shell: kubeadm alpha phase controlplane all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/manifests/kube-controller-manager.yaml
+  when: inventory_hostname in groups['master-1']
+
+- name: uploading cri socket annotation
+  shell: kubeadm alpha phase kubelet config annotate-cri --config kubeadm-config.yaml
+  when: inventory_hostname in groups['master-1']
+
+- name: mark the node as master
+  shell: kubeadm alpha phase mark-master --config /tmp/kubeadm-config.yaml
+  when: inventory_hostname in groups['master-1']
+
+
+- name: generate etcd certs on third node
+  shell: kubeadm alpha phase certs all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/server.crt
+  when: inventory_hostname in groups['master-2']
+
+- name: generate kubelet config on third node
+  shell: kubeadm alpha phase kubelet config write-to-disk --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/config.yaml
+  when: inventory_hostname in groups['master-2']
+
+- name: generate kubelet env on third node
+  shell: kubeadm alpha phase kubelet write-env-file --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/kubeadm-flags.env
+  when: inventory_hostname in groups['master-2']
+
+- name: generate kubelet kubeconfig on third node
+  shell: kubeadm alpha phase kubeconfig kubelet --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  when: inventory_hostname in groups['master-2']
+
+- name: start kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+  when: inventory_hostname in groups['master-2']
+
+- name: add etcd to cluster
+  shell: "kubectl exec -n kube-system etcd-{{ hostvars[groups['master-0']].ansible_hostname }} -- etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --endpoints=https://{{ hostvars[groups['master-0']].ansible_ens3.ipv4.address }}:2379 member add {{ ansible_hostname }} https://{{ ansible_ens3.ipv4.address }}:2380"
+  when: inventory_hostname in groups['master-2']
+
+- name: write etcd manifest
+  shell: kubeadm alpha phase etcd local --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/manifests/etcd.yaml
+  when: inventory_hostname in groups['master-2']
+
+- name: write controlplane configs
+  shell: kubeadm alpha phase kubeconfig all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/controller-manager.conf
+  when: inventory_hostname in groups['master-2']
+
+- name: write controlplane manifests
+  shell: kubeadm alpha phase controlplane all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/manifests/kube-controller-manager.yaml
+  when: inventory_hostname in groups['master-2']
+
+- name: uploading cri socket annotation
+  shell: kubeadm alpha phase kubelet config annotate-cri --config kubeadm-config.yaml
+  when: inventory_hostname in groups['master-2']
+
+- name: mark the node as master
+  shell: kubeadm alpha phase mark-master --config /tmp/kubeadm-config.yaml
+  when: inventory_hostname in groups['master-2']
