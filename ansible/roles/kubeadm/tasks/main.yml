@@ -66,6 +66,12 @@
     state: restarted
   when: inventory_hostname in groups['master-1']
 
+- name: wait for kubelet port
+  wait_for:
+    port: 10250
+    delay: 5
+  when: inventory_hostname in groups['master-1']
+
 - name: add etcd to cluster
   shell: "kubectl exec -n kube-system etcd-{{ hostvars[groups['master-0'][0]].ansible_hostname }} -- etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --endpoints=https://{{ hostvars[groups['master-0'][0]].ansible_ens3.ipv4.address }}:2379 member add {{ ansible_hostname }} https://{{ ansible_ens3.ipv4.address }}:2380"
   environment:
@@ -127,6 +133,12 @@
   systemd:
     name: kubelet
     state: restarted
+  when: inventory_hostname in groups['master-2']
+
+- name: wait for kubelet port
+  wait_for:
+    port: 10250
+    delay: 5
   when: inventory_hostname in groups['master-2']
 
 - name: add etcd to cluster
