@@ -3,3 +3,65 @@
   template:
     src: kubeadm-config.yaml
     dest: /tmp/
+
+- name: run kubeadm init on first node
+  shell: kubeadm init --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/pki/ca.crt
+  when: inventory_hostname in groups['master-0']
+  register: kubeadm_init
+
+- debug:
+    msg: "{{ hostvars[groups['master-0'][0]].kubeadm_init.stdout_lines | last }}"
+
+- name: make sure the kubernetes folder exists
+  file:
+    path: /etc/kubernetes/pki/etcd
+    state: directory
+
+- name: copy generated config and certs to other hosts
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ item }}"
+  loop:
+    - /etc/kubernetes/pki/ca.crt
+    - /etc/kubernetes/pki/ca.key
+    - /etc/kubernetes/pki/sa.pub
+    - /etc/kubernetes/pki/sa.key
+    - /etc/kubernetes/pki/front-proxy-ca.crt
+    - /etc/kubernetes/pki/front-proxy-ca.key
+    - /etc/kubernetes/pki/etcd/ca.crt
+    - /etc/kubernetes/pki/etcd/ca.key
+    - /etc/kubernetes/admin.conf
+  delegate_to: "{{ groups['master-0'][0] }}"
+  when: inventory_hostname not in groups['master-0']
+
+- name: generate etcd certs on master-1
+  shell: kubeadm alpha phase certs all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/server.crt
+  when: inventory_hostname in groups['master-1']
+
+- name: generate kubelet config on master-1
+  shell: kubeadm alpha phase kubelet config write-to-disk --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/config.yaml
+  when: inventory_hostname in groups['master-1']
+
+- name: generate kubelet env on master-1
+  shell: kubeadm alpha phase kubelet write-env-file --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/kubeadm-flags.env
+  when: inventory_hostname in groups['master-1']
+
+- name: generate kubelet kubeconfig on master-1
+  shell: kubeadm alpha phase kubeconfig kubelet --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  when: inventory_hostname in groups['master-1']
+
+- name: start kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+  when: inventory_hostname in groups['master-1']
