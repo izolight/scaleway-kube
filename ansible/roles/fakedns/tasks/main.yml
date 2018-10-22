@@ -1,0 +1,5 @@
+---
+- name: add etc hosts file for fake dns
+  template:
+    src: hosts
+    dest: /etc/hosts

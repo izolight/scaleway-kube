@@ -1,13 +1,13 @@
 [proxies]
-10.0.200.10
-10.0.200.11
+10.0.200.10 DNS_NAME=proxy-0.local
+10.0.200.11 DNS_NAME=proxy-1.local
 
 [etcd_ca]
-10.0.200.20 vpn_ip=10
+10.0.200.20 vpn_ip=10 DNS_NAME=master-0.local
 
 [etcd_noca]
-10.0.200.21 vpn_ip=11
-10.0.200.22 vpn_ip=12
+10.0.200.21 vpn_ip=11 DNS_NAME=master-1.local
+10.0.200.22 vpn_ip=12 DNS_NAME=master-2.local
 
 [masters:children]
 etcd_ca
