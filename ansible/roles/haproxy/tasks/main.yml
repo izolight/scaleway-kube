@@ -4,3 +4,12 @@
     name: haproxy
     update-cache: yes
 
+- name: copy haproxy config
+  template:
+    src: haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: restart haproxy
+  systemd:
+    name: haproxy
+    state: restarted
