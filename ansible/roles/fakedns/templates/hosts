@@ -8,7 +8,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 
-{{ hostvars[groups['proxies'][0]].ansible_ens3.ipv4.address }} {{ LB_DNS }}
+{{ hostvars[groups['proxies'][0]].ansible_ens4.ipv4.address }} {{ LB_DNS }}
 {% for h in groups['masters'] %}
 {{ hostvars[h].ansible_ens3.ipv4.address }} {{ hostvars[h].ansible_hostname }}
 {% endfor %}

@@ -6,4 +6,4 @@ PrivateKey = {{ private_key.content | b64decode | trim }}
 [Peer]
 PublicKey = {{ hostvars[item].public_key.content | b64decode | trim }}
 AllowedIPs = 0.0.0.0/0
-Endpoint = {{ item }}:{{ VPN_PORT }}
+Endpoint = {{ hostvars[item].ansible_ens4.ipv4.address }}:{{ VPN_PORT }}
