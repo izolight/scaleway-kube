@@ -1,0 +1,25 @@
+---
+- name: generate etcd certs
+  shell: kubeadm alpha phase certs all --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/server.crt
+
+- name: generate kubelet config
+  shell: kubeadm alpha phase kubelet config write-to-disk --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/config.yaml
+
+- name: generate kubelet env
+  shell: kubeadm alpha phase kubelet write-env-file --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /var/lib/kubelet/kubeadm-flags.env
+
+- name: generate kubelet kubeconfig
+  shell: kubeadm alpha phase kubeconfig kubelet --config /tmp/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+
+- name: start kubelet
+  systemd:
+    name: kubelet
+    state: restarted
