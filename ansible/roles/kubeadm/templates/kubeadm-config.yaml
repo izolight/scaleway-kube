@@ -26,11 +26,11 @@ etcd:
 {% endif %}
     serverCertSANs:
       - {{ ansible_hostname }}
-      - {{ DNS_NAME }}
+      - {{ inventory_hostname }}
       - {{ ansible_ens3.ipv4.address }}
     peerCertSANs:
       - {{ ansible_hostname }}
-      - {{ DNS_NAME }}
+      - {{ inventory_hostname }}
       - {{ ansible_ens3.ipv4.address }}
 kind: ClusterConfiguration
 kubernetesVersion: v1.12.1

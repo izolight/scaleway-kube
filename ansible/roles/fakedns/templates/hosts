@@ -10,5 +10,5 @@ ff02::3 ip6-allhosts
 
 {{ hostvars[groups['proxies'][0]].ansible_ens3.ipv4.address }} {{ LB_DNS }}
 {% for h in groups['masters'] %}
-{{ hostvars[h].ansible_ens3.ipv4.address }} {{ hostvars[h].DNS_NAME }}
+{{ hostvars[h].ansible_ens3.ipv4.address }} {{ hostvars[h].ansible_hostname }}
 {% endfor %}

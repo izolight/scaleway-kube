@@ -1,15 +1,15 @@
 [proxies]
-10.0.200.10 DNS_NAME=proxy-0.dev
-10.0.200.11 DNS_NAME=proxy-1.dev
+proxy-0.vm.nat ansible_host=10.0.200.10
+proxy-1.vm.nat ansible_host=10.0.200.11
 
 [master-0]
-10.0.200.20 vpn_ip=10 DNS_NAME=master-0.dev
+master-0.vm.private ansible_host=10.0.200.20 vpn_ip=10
 
 [master-1]
-10.0.200.21 vpn_ip=11 DNS_NAME=master-1.dev
+master-1.vm.private ansible_host=10.0.200.21 vpn_ip=11
 
 [master-2]
-10.0.200.22 vpn_ip=12 DNS_NAME=master-2.dev
+master-2.vm.private ansible_host=10.0.200.22 vpn_ip=12
 
 [etcd_init:children]
 master-0
