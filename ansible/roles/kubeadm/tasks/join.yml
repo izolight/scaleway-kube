@@ -19,6 +19,22 @@
   args:
     creates: /etc/kubernetes/manifests/kube-controller-manager.yaml
 
+- name: ensure incoming wireguard iptables still works
+  iptables:
+    action: insert
+    chain: INPUT
+    protocol: udp
+    destination_port: 54321
+    jump: ACCEPT
+
+- name: ensure outgoing wireguard iptables still works
+  iptables:
+    action: insert
+    chain: OUTPUT
+    protocol: udp
+    destination_port: 54321
+    jump: ACCEPT
+
 - name: uploading cri socket annotation
   shell: kubeadm alpha phase kubelet config annotate-cri --config /tmp/kubeadm-config.yaml
 

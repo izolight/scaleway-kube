@@ -45,15 +45,15 @@
     timeout: 60
   when: inventory_hostname in groups['master-1']
 
-- name: join cluster
+- name: join second node to cluster
   include_tasks: join.yml
   when: inventory_hostname in groups['master-1']
 
-- name: setup config and start kubelet on second node
+- name: setup config and start kubelet on third node
   include_tasks: kubelet.yml
   when: inventory_hostname in groups['master-2']
 
-- name: join cluster
+- name: join third node to cluster
   include_tasks: join.yml
   when: inventory_hostname in groups['master-2']
 
