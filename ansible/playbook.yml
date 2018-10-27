@@ -22,6 +22,7 @@
     - { role: kubernetes-tools, tags: ["kubernetes", "kube-tools"] }
     - { role: ssh, tags: ["kubernetes", "etcd", "ssh"] }
     - { role: kubeadm, tags: ["kubernetes", "kubeadm"] }
+    - { role: weave, tags: ["kubernetes", "weave"] }
 
 - hosts: etcd
   roles:

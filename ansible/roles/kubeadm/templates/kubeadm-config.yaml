@@ -35,5 +35,5 @@ etcd:
 kind: ClusterConfiguration
 kubernetesVersion: v1.12.1
 networking:
-  serviceSubnet: "172.16.0.0/12"
-  podSubnet: "172.24.0.0/16"
+  serviceSubnet: "{{ SERVICE_SUBNET }}"
+  podSubnet: "{{ POD_SUBNET }}"

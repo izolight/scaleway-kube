@@ -1,0 +1,17 @@
+---
+- name: download weave manifest
+  get_url:
+    url: "https://cloud.weave.works/k8s/net?k8s-version={{ KUBERNETES_VERSION }}"
+    dest: /tmp/weave.yaml
+
+- name: adjust cidr
+  replace:
+    dest: /tmp/weave.yaml
+    regexp: "^\\s{14}command:\\n\\s{16}\\- \\/home\\/weave\\/launch.sh\\n\\s{14}env:\\n\\s{16}\\- name: HOSTNAME"
+    replace: "              command:\n                 - \/home\/weave\/launch.sh\n\              env:\n\                - name: IPALLOC_RANGE\n                  value: {{ SERVICE_SUBNET }}\n                - name: HOSTNAME"
+
+- name: apply weave net
+  shell: kubectl apply -f /tmp/weave.yaml
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  run_once: true
