@@ -25,10 +25,11 @@ variable "architectures" {
   }
 }
 
-data "scaleway_image" "ubuntu" {
-    architecture    = "${lookup(var.architectures, var.commercial_type)}"
-    name            = "Ubuntu Xenial"
-}
+#data "scaleway_image" "ubuntu" {
+#    architecture    = "${lookup(var.architectures, var.lb_type)}"
+#    name            = "Ubuntu Xenial"
+#    most_recent = true
+#}
 
 provider "scaleway" {
     region  = "par1"
@@ -41,7 +42,8 @@ module "lb" {
 
     domain  = "${var.domain}"
     type    = "${var.lb_type}"
-    image   = "${data.scaleway_image.ubuntu.id}"
+    image   = "c564be4f-2dac-4b1b-a239-3f3a441700ed"
+#    image   = "${data.scaleway_image.ubuntu.id}"
 }
 
 module "master" {
@@ -49,7 +51,8 @@ module "master" {
 
     domain  = "${var.domain}"
     type    = "${var.master_type}"
-    image   = "${data.scaleway_image.ubuntu.id}"
+    image   = "b5a754d1-8262-47d2-acb2-22739295bb68"
+#    image   = "${data.scaleway_image.ubuntu.id}"
 }
 
 #module "node" {

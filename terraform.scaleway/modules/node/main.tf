@@ -10,7 +10,6 @@ resource "scaleway_server" "nodes" {
     type    = "${var.type}"
     name    = "node-${count.index}"
     boot_type = "local"
-    dynamic_ip_required = true
     enable_ipv6 = true
 
     tags = ["node"]

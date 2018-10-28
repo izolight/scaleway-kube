@@ -10,7 +10,6 @@ resource "scaleway_server" "masters" {
     type    = "${var.type}"
     name    = "master-${count.index}"
     boot_type = "local"
-    dynamic_ip_required = true
     enable_ipv6 = true
 
     tags = ["master"]
