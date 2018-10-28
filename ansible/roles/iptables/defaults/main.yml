@@ -49,36 +49,36 @@ default_tcp: |
 # Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping
 # flooding.
 default_icmp_v4: |
-  -A INPUT -p icmp --icmp-type 0  -m conntrack --ctstate NEW -j ACCEPT
-  -A INPUT -p icmp --icmp-type 3  -m conntrack --ctstate NEW -j ACCEPT
-  -A INPUT -p icmp --icmp-type 11 -m conntrack --ctstate NEW -j ACCEPT
-  -A INPUT -p icmp --icmp-type 8  -m conntrack --ctstate NEW -j ICMPFLOOD
+  -A ICMP -p icmp --icmp-type 0  -m conntrack --ctstate NEW -j ACCEPT
+  -A ICMP -p icmp --icmp-type 3  -m conntrack --ctstate NEW -j ACCEPT
+  -A ICMP -p icmp --icmp-type 11 -m conntrack --ctstate NEW -j ACCEPT
+  -A ICMP -p icmp --icmp-type 8  -m conntrack --ctstate NEW -j ICMPFLOOD
 
 # Permit needed ICMP packet types for IPv6 per RFC 4890.
 # Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping
 # flooding.
 default_icmp_v6: |
-  -A INPUT              -p ipv6-icmp --icmpv6-type 1   -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 2   -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 3   -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 4   -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 133 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 134 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 135 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 136 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 137 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 141 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 142 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 130 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 131 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 132 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 143 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 148 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 149 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 151 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 152 -j ACCEPT
-  -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 153 -j ACCEPT
-  -A INPUT              -p ipv6-icmp --icmpv6-type 128 -j ICMPFLOOD
+  -A ICMP              -p ipv6-icmp --icmpv6-type 1   -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 2   -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 3   -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 4   -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 133 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 134 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 135 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 136 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 137 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 141 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 142 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 130 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 131 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 132 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 143 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 148 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 149 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 151 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 152 -j ACCEPT
+  -A ICMP -s fe80::/10 -p ipv6-icmp --icmpv6-type 153 -j ACCEPT
+  -A ICMP              -p ipv6-icmp --icmpv6-type 128 -j ICMPFLOOD
 
 # Chain for preventing ping flooding - up to 6 pings per second from a single 
 # source, again with log limiting. Also prevents us from ICMP REPLY flooding 
