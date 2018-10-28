@@ -88,3 +88,9 @@ default_icmp_flood: |
   -A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -m limit --limit 1/sec --limit-burst 1 -j LOG --log-prefix "iptables[ICMP-flood]: "
   -A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -j DROP
   -A ICMPFLOOD -j ACCEPT
+
+default_udp_v4: |
+  -A UDP -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+
+default_udp_v6: |
+  -A UDP -p udp --dport 546 -d fe80::/10 -j ACCEPT

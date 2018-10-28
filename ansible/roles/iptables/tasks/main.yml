@@ -59,6 +59,17 @@
     - 4
     - 6
 
+- name: setup default udp rules
+  iptables_raw:
+    name: default_udp_rules
+    weight: 10
+    state: present
+    rules: "{{ item.rule }}"
+    ipversion: "{{ item.v }}"
+  loop:
+    - { v: 4, rule: "{{ default_udp_v4 }}" }
+    - { v: 6, rule: "{{ default_udp_v6 }}" }
+
 - name: setup default icmp rules
   iptables_raw:
     name: default_icmp_rules
