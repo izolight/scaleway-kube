@@ -17,6 +17,7 @@
     rules: |
       -A FORWARD -i wg0 -j ACCEPT
       -A FORWARD -o wg0 -j ACCEPT
+  tags: iptables
 
 - name: wireguard nat rules
   iptables_raw:
@@ -25,3 +26,4 @@
     weight: 10
     table: nat
     rules: "-A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE"
+  tags: iptables
