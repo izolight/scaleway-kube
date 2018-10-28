@@ -8,3 +8,20 @@
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
   tags: iptables
+
+- name: enable forwarding rules for proxies
+  iptables_raw:
+    name: wireguard_forwarding
+    state: present
+    weight: 10
+    rules: |
+      -A FORWARD -i wg0 -j ACCEPT
+      -A FORWARD -o wg0 -j ACCEPT
+
+- name: wireguard nat rules
+  iptables_raw:
+    name: wireguard_nat
+    state: present
+    weight: 10
+    table: nat
+    rules: "-A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE"
