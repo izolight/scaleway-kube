@@ -1,0 +1,39 @@
+---
+- name: install iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+    update-cache: true
+
+- name: setup protocol specific chains
+  iptables_raw:
+    name: protocol_chains
+    state: present
+    rules: "{{ custom_chains }}"
+
+- name: setup default head rules
+  iptables_raw:
+    name: default_rules_head
+    weight: 10
+    state: present
+    rules: "{{ default_rules_head }}"
+
+- name: setup default tcp rules
+  iptables_raw:
+    name: default_tcp_rules
+    weight: 10
+    state: present
+    rules: "{{ default_tcp }}"
+
+- name: setup default icmp rules
+  iptables_raw:
+    name: default_icmp_rules
+    weight: 10
+    state: present
+    rules: "{{ default_icmp }}"
+
+- name: setup default policies
+  iptables_raw:
+    name: default_policies
+    state: present
+    rules: "{{ default_policies }}"
