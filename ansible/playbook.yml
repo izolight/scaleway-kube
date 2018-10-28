@@ -10,10 +10,10 @@
 - hosts: all
   roles:
     - { role: prepare, tags: ["prepare"] }
+    - { role: iptables, tags: ["iptables"] }
     - { role: update, tags: ["update"], serial: "30%" }
     - { role: wireguard, tags: ["wireguard"] }
     - { role: fakedns, when: env == 'local', tags: ["fakedns"] }
-    - { role: iptables, tags: ["iptables"] }
 
 - hosts: kube-hosts
   roles:
