@@ -1,2 +1,3 @@
 *.retry
 vault-pw.txt
+group_vars/private.yml

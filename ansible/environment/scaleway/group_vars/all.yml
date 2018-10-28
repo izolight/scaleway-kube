@@ -1,0 +1,3 @@
+---
+MIRROR_URL: mirror.scaleway.com
+V6_PPA: "ppa.{{ DOMAIN }}"

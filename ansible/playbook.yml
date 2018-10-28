@@ -8,6 +8,7 @@
     - { role: natted, when: env == 'local', tags: ["router"] }
 
 - hosts: all
+  vars_files: group_vars/private.yml
   roles:
     - { role: common, tags: ["common"] }
     - { role: iptables, tags: ["iptables"] }
@@ -30,5 +31,6 @@
     - { role: etcd, tags: ["etcd"] } # use this if doing a external etcd cluster
 
 - hosts: proxies
+  vars_files: group_vars/private.yml
   roles:
     - { role: haproxy, tags: ["haproxy"] }
