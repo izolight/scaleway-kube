@@ -20,11 +20,11 @@
     name: default_rules_head
     weight: 10
     state: present
-    rules: "{{ default_rules_head_v }}{{ item }}"
-    ipversion: "{{ item }}"
+    rules: "{{ item.rule }}"
+    ipversion: "{{ item.v }}"
   loop:
-    - 4
-    - 6
+    - { v: 4, rule: default_rules_head_v4 }
+    - { v: 6, rule: default_rules_head_v6 }
 
 - name: setup icmp flood chain
   iptables_raw:
@@ -42,11 +42,11 @@
     name: block_fake_loopback
     weight: 11
     state: present
-    rules: "{{ default_rules_fake_v }}{{ item }}"
-    ipversion: "{{ item }}"
+    rules: "{{ item.rule }}"
+    ipversion: "{{ item.v }}"
   loop:
-    - 4
-    - 6
+    - { v: 4, rule: default_rules_fake_v4}
+    - { v: 6, rule: default_rules_fake_v6 }
 
 - name: setup default tcp rules
   iptables_raw:
@@ -64,11 +64,11 @@
     name: default_icmp_rules
     weight: 10
     state: present
-    rules: "{{ default_icmp_v }}{{ item }}"
-    ipversion: "{{ item }}"
+    rules: "{{ item.rule }}"
+    ipversion: "{{ item.v }}"
   loop:
-    - 4
-    - 6
+    - { v: 4, rule: default_icmp_v4}
+    - { v: 6, rule: default_icmp_v6 }
 
 - name: setup default policies
   iptables_raw:
