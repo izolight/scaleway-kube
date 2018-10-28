@@ -10,8 +10,8 @@
 - hosts: all
   roles:
     - { role: iptables, tags: ["iptables"] }
-    - { role: update, tags: ["update"], serial: "30%" }
     - { role: wireguard, tags: ["wireguard"] }
+    - { role: update, tags: ["update"], serial: "30%" }
     - { role: fakedns, when: env == 'local', tags: ["fakedns"] }
 
 - hosts: kube-hosts
