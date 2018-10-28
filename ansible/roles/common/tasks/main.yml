@@ -1,0 +1,13 @@
+---
+- name: replace apt repository with local mirror
+  replace:
+    path: /etc/apt/sources.list
+    regexp: "(archive|security)\.ubuntu\.com"
+    replace: "{{ MIRROR_URL }}"
+    backup: yes
+
+- name: replace launchpad url (ipv6 proxy)
+  replace:
+    path: /etc/apt/sources.list.d/scaleway-ubuntu-stable-xenial.list
+    regexp: "ppa.launchpad.net" 
+    replace: "{{ V6_PPA }}"

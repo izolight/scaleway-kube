@@ -9,6 +9,7 @@
 
 - hosts: all
   roles:
+    - { role: common, tags: ["common"] }
     - { role: iptables, tags: ["iptables"] }
     - { role: wireguard, tags: ["wireguard"] }
     - { role: update, tags: ["update"], serial: "30%" }
