@@ -1,0 +1,33 @@
+---
+- name: generate keypairs
+  shell: 'umask 077; wg genkey | tee privatekey | wg pubkey > publickey'
+  args:
+    chdir: /etc/wireguard
+    creates: privatekey
+
+- name: get public keys
+  slurp:
+    src: /etc/wireguard/publickey
+  register: public_key
+
+- name: get private keys
+  slurp:
+    src: /etc/wireguard/privatekey
+  register: private_key
+
+- name: create endpoint config
+  template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: 0600
+  when: "'proxies' in group_names"
+
+- name: create client config
+  template:
+    src: tunnel.conf.j2
+    dest: /etc/wireguard/tunnel_{{ idx }}.conf
+    mode: 0600
+  when: "'proxies' not in group_names"
+  loop: "{{ groups['proxies'] | sort }}"
+  loop_control:
+    index_var: idx

@@ -1,52 +1,17 @@
 ---
-- name: generate keypairs
-  shell: 'umask 077; wg genkey | tee privatekey | wg pubkey > publickey'
-  args:
-    chdir: /etc/wireguard
-    creates: privatekey
+- name: install wireguard
+  include_tasks: install.yml
 
-- name: get public keys
-  slurp:
-    src: /etc/wireguard/publickey
-  register: public_key
+- name: configure wireguard
+  include_tasks: config.yml
 
-- name: get private keys
-  slurp:
-    src: /etc/wireguard/privatekey
-  register: private_key
-
-- name: create endpoint config
-  template:
-    src: wg0.conf.j2
-    dest: /etc/wireguard/wg0.conf
-    mode: 0600
-  when: "'proxies' in group_names"
-
-- name: create client config
-  template:
-    src: tunnel.conf.j2
-    dest: /etc/wireguard/tunnel_{{ idx }}.conf
-    mode: 0600
+- name: setup failover for clients
+  include_tasks: failover.yml
   when: "'proxies' not in group_names"
-  loop: "{{ groups['proxies'] | sort }}"
-  loop_control:
-    index_var: idx
 
-- name: add incoming firewall rules
-  iptables:
-    action: insert
-    chain: INPUT
-    protocol: udp
-    destination_port: 54321
-    jump: ACCEPT
-
-- name: add outgoing firewall rules
-  iptables:
-    action: insert
-    chain: OUTPUT
-    protocol: udp
-    destination_port: 54321
-    jump: ACCEPT
+- name: setup iptables rules
+  include_tasks: iptables.yml
+  tags: iptables
 
 - name: enable wireguard endpoints
   systemd:
@@ -56,18 +21,6 @@
     enabled: yes
   when: "'proxies' in group_names"
 
-- name: create override dir for service
-  file:
-    path: /etc/systemd/system/wg-quick@.service.d
-    state: directory
-  when: "'proxies' not in group_names"
-
-- name: create override config for failover
-  copy:
-    src: wg-quick-override.conf
-    dest: /etc/systemd/system/wg-quick@.service.d/override.conf
-  when: "'proxies' not in group_names"
-
 - name: enable wireguard clients
   systemd:
     name: wg-quick@tunnel_0
@@ -76,26 +29,3 @@
     enabled: yes
   when: "'proxies' not in group_names"
 
-- name: copy failover script
-  template:
-    src: failover-vpn.sh
-    dest: /usr/local/bin/failover-vpn.sh
-    mode: 0755
-  when: "'proxies' not in group_names"
-
-- name: copy service and timer unit file
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/systemd/system/{{ item }}"
-  loop:
-    - failover-vpn.service
-    - failover-vpn.timer
-  when: "'proxies' not in group_names"
-
-- name: enable failover vpn timer
-  systemd:
-    name: failover-vpn.timer
-    state: started
-    enabled: yes
-    daemon-reload: yes
-  when: "'proxies' not in group_names"

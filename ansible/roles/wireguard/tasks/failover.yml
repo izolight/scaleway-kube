@@ -1,0 +1,31 @@
+---
+- name: create override dir for service
+  file:
+    path: /etc/systemd/system/wg-quick@.service.d
+    state: directory
+
+- name: create override config for failover
+  copy:
+    src: wg-quick-override.conf
+    dest: /etc/systemd/system/wg-quick@.service.d/override.conf
+
+- name: copy failover script
+  template:
+    src: failover-vpn.sh
+    dest: /usr/local/bin/failover-vpn.sh
+    mode: 0755
+
+- name: copy service and timer unit file
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - failover-vpn.service
+    - failover-vpn.timer
+
+- name: enable failover vpn timer
+  systemd:
+    name: failover-vpn.timer
+    state: started
+    enabled: yes
+    daemon-reload: yes

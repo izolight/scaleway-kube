@@ -1,0 +1,10 @@
+---
+- name: Open ports in iptables
+  iptables_raw:
+    name: wireguard_open_ports
+    state: present
+    weight: 15
+    rules: |
+      -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
+      -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
+  tags: iptables

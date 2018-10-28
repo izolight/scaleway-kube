@@ -1,12 +1,12 @@
 [Interface]
-Address = {{ VPN_SUBNET }}.1/24
+Address = {{ WIREGUARD_SUBNET }}.1/24
 PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
-ListenPort = {{ VPN_PORT }}
+ListenPort = {{ WIREGUARD_PORT }}
 PrivateKey = {{ private_key.content | b64decode | trim }}
 {% for h in groups['clients'] | sort %}
 
 [Peer]
 PublicKey = {{ hostvars[h].public_key.content | b64decode | trim}}
-AllowedIPs = {{ VPN_SUBNET }}.{{ hostvars[h].vpn_ip }}/32
+AllowedIPs = {{ WIREGUARD_SUBNET }}.{{ hostvars[h].vpn_ip }}/32
 {% endfor %}
