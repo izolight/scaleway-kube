@@ -46,15 +46,17 @@ default_tcp: |
 # Note: RFC 792 states that all hosts MUST respond to ICMP ECHO requests.
 # Blocking these can make diagnosing of even simple faults much more tricky.
 # Real security lies in locking down and hardening all services, not by hiding.
+# Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping
+# flooding.
 default_icmp_v4: |
   -A INPUT -p icmp --icmp-type 0  -m conntrack --ctstate NEW -j ACCEPT
   -A INPUT -p icmp --icmp-type 3  -m conntrack --ctstate NEW -j ACCEPT
   -A INPUT -p icmp --icmp-type 11 -m conntrack --ctstate NEW -j ACCEPT
-# Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping 
-# flooding.
-	-A INPUT -p icmp --icmp-type 8 	-m conntrack --ctstate NEW -j ICMPFLOOD
+  -A INPUT -p icmp --icmp-type 8  -m conntrack --ctstate NEW -j ICMPFLOOD
 
 # Permit needed ICMP packet types for IPv6 per RFC 4890.
+# Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping
+# flooding.
 default_icmp_v6: |
   -A INPUT              -p ipv6-icmp --icmpv6-type 1   -j ACCEPT
   -A INPUT              -p ipv6-icmp --icmpv6-type 2   -j ACCEPT
@@ -76,9 +78,7 @@ default_icmp_v6: |
   -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 151 -j ACCEPT
   -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 152 -j ACCEPT
   -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 153 -j ACCEPT
-# Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping 
-# flooding.
-	-A INPUT 							-p ipv6-icmp --icmpv6-type 128 -j ICMPFLOOD
+  -A INPUT              -p ipv6-icmp --icmpv6-type 128 -j ICMPFLOOD
 
 # Chain for preventing ping flooding - up to 6 pings per second from a single 
 # source, again with log limiting. Also prevents us from ICMP REPLY flooding 
