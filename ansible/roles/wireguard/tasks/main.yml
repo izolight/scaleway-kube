@@ -1,6 +1,11 @@
 ---
+- name: install wireguard (from source)
+  include_tasks: install_source.yml
+  when: COMPILE_WIREGUARD == true
+
 - name: install wireguard
-  include_tasks: install.yml
+  include_tasks: install_ppa.yml
+  when: COMPILE_WIREGUARD == true
 
 - name: configure wireguard
   include_tasks: config.yml
