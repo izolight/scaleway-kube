@@ -22,6 +22,7 @@ default_rules_head_v4: |
   -A INPUT -p icmp -m conntrack --ctstate NEW -j ICMP
 
 default_rules_head_v6: |
+  -A INPUT -d ff00::/8 -j ACCEPT
   {{ default_rules_head }}
   -A INPUT -p ipv6-icmp -m conntrack --ctstate NEW -j ICMP
 
