@@ -9,7 +9,6 @@
 
 - hosts: all
   roles:
-    - { role: prepare, tags: ["prepare"] }
     - { role: iptables, tags: ["iptables"] }
     - { role: update, tags: ["update"], serial: "30%" }
     - { role: wireguard, tags: ["wireguard"] }
