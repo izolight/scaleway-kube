@@ -6,7 +6,7 @@
 
 - name: add wireguard ppa (ipv6 proxy)
 	apt_repository:
-		repo: "http://ppa.{{ MIRROR_DOMAIN }}/wireguard/wireguard/ubuntu/ xenial main"
+		repo: "http://ppa.{{ V6_PPA }}/wireguard/wireguard/ubuntu/ xenial main"
 		state: present
 
 - name: install wireguard
