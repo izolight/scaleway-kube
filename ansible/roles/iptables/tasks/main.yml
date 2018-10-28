@@ -10,13 +10,43 @@
     name: protocol_chains
     state: present
     rules: "{{ custom_chains }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
 
 - name: setup default head rules
   iptables_raw:
     name: default_rules_head
     weight: 10
     state: present
-    rules: "{{ default_rules_head }}"
+    rules: "{{ default_rules_head_v }}{{ item }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
+
+- name: setup icmp flood chain
+  iptables_raw:
+    name: icmp_flood_rate_limit
+    weight: 10
+    state: present
+    rules: "{{ default_icmp_flood }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
+
+- name: block packets claiming to be from loopback
+  iptables_raw:
+    name: block_fake_loopback
+    weight: 11
+    state: present
+    rules: "{{ default_rules_fake_v }}{{ item }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
 
 - name: setup default tcp rules
   iptables_raw:
@@ -24,16 +54,28 @@
     weight: 10
     state: present
     rules: "{{ default_tcp }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
 
 - name: setup default icmp rules
   iptables_raw:
     name: default_icmp_rules
     weight: 10
     state: present
-    rules: "{{ default_icmp }}"
+    rules: "{{ default_icmp_v }}{{ item }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
 
 - name: setup default policies
   iptables_raw:
     name: default_policies
     state: present
     rules: "{{ default_policies }}"
+    ipversion: "{{ item }}"
+  loop:
+    - 4
+    - 6
