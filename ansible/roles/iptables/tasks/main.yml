@@ -23,8 +23,8 @@
     rules: "{{ item.rule }}"
     ipversion: "{{ item.v }}"
   loop:
-    - { v: 4, rule: default_rules_head_v4 }
-    - { v: 6, rule: default_rules_head_v6 }
+    - { v: 4, rule: "{{ default_rules_head_v4 }}" }
+    - { v: 6, rule: "{{ default_rules_head_v6 }}" }
 
 - name: setup icmp flood chain
   iptables_raw:
@@ -45,8 +45,8 @@
     rules: "{{ item.rule }}"
     ipversion: "{{ item.v }}"
   loop:
-    - { v: 4, rule: default_rules_fake_v4}
-    - { v: 6, rule: default_rules_fake_v6 }
+    - { v: 4, rule: "{{ default_rules_fake_v4 }}" }
+    - { v: 6, rule: "{{ default_rules_fake_v6 }}" }
 
 - name: setup default tcp rules
   iptables_raw:
@@ -67,8 +67,8 @@
     rules: "{{ item.rule }}"
     ipversion: "{{ item.v }}"
   loop:
-    - { v: 4, rule: default_icmp_v4}
-    - { v: 6, rule: default_icmp_v6 }
+    - { v: 4, rule: "{{ default_icmp_v4 }}" }
+    - { v: 6, rule: "{{ default_icmp_v6 }}" }
 
 - name: setup default policies
   iptables_raw:
