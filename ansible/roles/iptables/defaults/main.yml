@@ -83,7 +83,7 @@ default_icmp_v6: |
 # Chain for preventing ping flooding - up to 6 pings per second from a single 
 # source, again with log limiting. Also prevents us from ICMP REPLY flooding 
 # some victim when replying to ICMP ECHO from a spoofed source.
-default_icmp_floow: |
+default_icmp_flood: |
   -A ICMPFLOOD -m recent --set --name ICMP --rsource
   -A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -m limit --limit 1/sec --limit-burst 1 -j LOG --log-prefix "iptables[ICMP-flood]: "
   -A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -j DROP
