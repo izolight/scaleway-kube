@@ -12,6 +12,58 @@
     - 6
   tags: iptables
 
+- name: enable fw rules for etcd
+  iptables_raw:
+    name: etcd
+    state: present
+    weight: 15
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 2379:2380 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
+- name: enable fw rules for kubelet-api
+  iptables_raw:
+    name: kubelet-api
+    state: present
+    weight: 15
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 10250 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
+- name: enable fw rules for kube-scheduler
+  iptables_raw:
+    name: kube-scheduler
+    state: present
+    weight: 15
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 10251 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
+- name: enable fw rules for kube-controller-manager
+  iptables_raw:
+    name: kube-controller-manager
+    state: present
+    weight: 15
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 10252 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
 - name: copy kubeadm config
   template:
     src: kubeadm-config.yaml
