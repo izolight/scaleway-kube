@@ -16,7 +16,11 @@
     dest: /usr/local/src
     remote_src: yes
 
-- name: Compile and install WireGuard
+- name: Compile WireGuard
+  make:
+    chdir: "/usr/local/src/WireGuard-{{ WIREGUARD_VERSION }}/src/"
+
+- name: Install WireGuard
   make:
     chdir: "/usr/local/src/WireGuard-{{ WIREGUARD_VERSION }}/src/"
     target: install

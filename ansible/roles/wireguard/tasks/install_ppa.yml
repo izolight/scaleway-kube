@@ -1,16 +1,16 @@
 ---
 - name: add apt key
-	apt_key:
-		keyserver: keys.gnupg.net
-		id: E1B39B6EF6DDB96564797591AE33835F504A1A25
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: E1B39B6EF6DDB96564797591AE33835F504A1A25
 
 - name: add wireguard ppa (ipv6 proxy)
-	apt_repository:
-		repo: "http://ppa.{{ V6_PPA }}/wireguard/wireguard/ubuntu/ xenial main"
-		state: present
+  apt_repository:
+    repo: "http://ppa.{{ V6_PPA }}/wireguard/wireguard/ubuntu/ xenial main"
+    state: present
 
 - name: install wireguard
-	apt:
-		name: wireguard
-		state: present
-		update-cache: yes
+  apt:
+    name: wireguard
+    state: present
+    update-cache: yes
