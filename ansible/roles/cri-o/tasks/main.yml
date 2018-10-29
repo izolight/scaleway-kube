@@ -38,3 +38,10 @@
   apt:
     name: cri-o-1.12
     update-cache: yes
+
+- name: enable and start cri-o
+  systemd:
+    name: crio
+    state: restarted
+    enabled: yes
+    daemon-reload: yes
