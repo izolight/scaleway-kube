@@ -1,4 +1,17 @@
 ---
+- name: enable fw rules for apiserver
+  iptables_raw:
+    name: kube-apiserver
+    state: present
+    weight: 15
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 6443 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
 - name: copy kubeadm config
   template:
     src: kubeadm-config.yaml
