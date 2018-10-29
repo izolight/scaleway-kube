@@ -17,6 +17,7 @@
     - { role: fakedns, when: env == 'local', tags: ["fakedns"] }
 
 - hosts: kube-hosts
+  vars_files: group_vars/private.yml
   roles:
     - { role: cri-o, when: CONTAINER_RUNTIME == 'cri-o', tags: ["kubernetes", "runtime"] } # choose either cri-o or containerd or docker
     - { role: docker, when: CONTAINER_RUNTIME == 'docker', tags: ["kubernetes", "runtime"] }
