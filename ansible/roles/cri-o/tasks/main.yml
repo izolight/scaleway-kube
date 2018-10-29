@@ -39,6 +39,18 @@
     name: cri-o-1.12
     update-cache: yes
 
+- name: use cgroupfs manager
+  replace:
+    path: /etc/crio/crio.conf
+    regexp: 'cgroup_manager = "systemd"'
+    replace: 'cgroup_manager = "cgroupfs"'
+
+- name: fix runc path
+  replace:
+    path: /etc/crio/crio.conf
+    regexp: 'runtime_path = "\/usr\/bin\/runc"'
+    replace: 'runtime_path = "/usr/lib/cri-o-runc/sbin/runc"'
+
 - name: enable and start cri-o
   systemd:
     name: crio
