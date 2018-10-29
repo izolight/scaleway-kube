@@ -1,3 +1,4 @@
 ---
 MIRROR_URL: mirror.scaleway.com
 V6_PPA: "ppa.{{ DOMAIN }}"
+CONTAINER_RUNTIME: cri-o

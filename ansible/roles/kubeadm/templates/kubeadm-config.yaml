@@ -1,7 +1,11 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
 nodeRegistration:
+{% if CONTAINER_RUNTIME == 'containerd' %}
   criSocket: /run/containerd/containerd.sock
+{% elif CONTAINER_RUNTIME == 'cri-o' %}
+  criSocket: /run/crio/crio.sock
+{% endif %}
 ---
 apiServerCertSANs:
 - "{{ LB_DNS }}"
