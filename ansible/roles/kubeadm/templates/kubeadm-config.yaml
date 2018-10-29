@@ -14,16 +14,16 @@ controlPlaneEndpoint: "{{ LB_DNS }}:{{ APISERVER_PORT }}"
 etcd:
   local:
     extraArgs:
-      listen-client-urls: "https://127.0.0.1:2379,https://{{ ansible_ens3.ipv4.address }}:2379"
-      advertise-client-urls: "https://{{ ansible_ens3.ipv4.address }}:2379"
-      listen-peer-urls: "https://{{ ansible_ens3.ipv4.address }}:2380"
-      initial-advertise-peer-urls: "https://{{ ansible_ens3.ipv4.address }}:2380"
+      listen-client-urls: "https://127.0.0.1:2379,https://{{ ansible_default_ipv4.address }}:2379"
+      advertise-client-urls: "https://{{ ansible_default_ipv4.address }}:2379"
+      listen-peer-urls: "https://{{ ansible_default_ipv4.address }}:2380"
+      initial-advertise-peer-urls: "https://{{ ansible_default_ipv4.address }}:2380"
 {% if inventory_hostname in groups['master-0'] %}
-      initial-cluster: "{{ ansible_hostname }}=https://{{ ansible_ens3.ipv4.address }}:2380"
+      initial-cluster: "{{ ansible_hostname }}=https://{{ ansible_default_ipv4.address }}:2380"
 {% elif inventory_hostname in groups['master-1'] %}
-      initial-cluster: "{{ hostvars[groups['master-0'][0]].ansible_hostname }}=https://{{ hostvars[groups['master-0'][0]].ansible_ens3.ipv4.address }}:2380,{{ ansible_hostname }}=https://{{ ansible_ens3.ipv4.address }}:2380"
+      initial-cluster: "{{ hostvars[groups['master-0'][0]].ansible_hostname }}=https://{{ hostvars[groups['master-0'][0]].ansible_default_ipv4.address }}:2380,{{ ansible_hostname }}=https://{{ ansible_default_ipv4.address }}:2380"
 {% else %}
-      initial-cluster: "{% for h in groups['masters'] | sort %}{{ hostvars[h].ansible_hostname }}=https://{{ hostvars[h].ansible_ens3.ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+      initial-cluster: "{% for h in groups['masters'] | sort %}{{ hostvars[h].ansible_hostname }}=https://{{ hostvars[h].ansible_default_ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
 {% endif %}
 {% if inventory_hostname not in groups['master-0'] %}
       initial-cluster-state: existing
@@ -31,11 +31,11 @@ etcd:
     serverCertSANs:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
-      - {{ ansible_ens3.ipv4.address }}
+      - {{ ansible_default_ipv4.address }}
     peerCertSANs:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
-      - {{ ansible_ens3.ipv4.address }}
+      - {{ ansible_default_ipv4.address }}
 kind: ClusterConfiguration
 kubernetesVersion: v1.12.1
 networking:
