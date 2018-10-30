@@ -1,12 +1,13 @@
 ---
 - name: add firewall rules
   include_tasks: iptables.yml
-  tags: iptables
+  tags: iptables,initial_node
 
 - name: copy kubeadm config
   template:
     src: kubeadm-config.yaml
     dest: /tmp/
+  tags: initial_node
 
 - name: run kubeadm init on first node
   shell: kubeadm init --config /tmp/kubeadm-config.yaml
@@ -14,6 +15,7 @@
     creates: /etc/kubernetes/pki/ca.crt
   when: inventory_hostname in groups['master-0']
   register: kubeadm_init
+  tags: initial_node
 
 - debug:
     msg: "{{ hostvars[groups['master-0'][0]].kubeadm_init.stdout_lines | last }}"
