@@ -1,4 +1,9 @@
 ---
+- name: create weave dir
+  file:
+    path: /var/lib/weave
+    state: directory
+
 - name: generate random password
   template:
     src: weave-passwd
