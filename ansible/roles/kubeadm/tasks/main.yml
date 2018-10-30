@@ -17,13 +17,11 @@
   register: kubeadm_init
   tags: initial_node
 
-- debug:
-    msg: "{{ hostvars[groups['master-0'][0]].kubeadm_init.stdout_lines | last }}"
-
 - name: make sure the kubernetes folder exists
   file:
     path: /etc/kubernetes/pki/etcd
     state: directory
+  tags: second_node
 
 - name: copy generated config and certs to other hosts
   synchronize:
@@ -41,10 +39,12 @@
     - /etc/kubernetes/admin.conf
   delegate_to: "{{ groups['master-0'][0] }}"
   when: inventory_hostname not in groups['master-0']
+  tags: second_node
 
 - name: setup config and start kubelet on second node
   include_tasks: kubelet.yml
   when: inventory_hostname in groups['master-1']
+  tags: second_node
 
 - name: wait for etcd
   wait_for:

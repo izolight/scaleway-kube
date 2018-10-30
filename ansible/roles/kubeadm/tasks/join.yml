@@ -7,27 +7,31 @@
     rules: |
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
-  tags: iptables
+  tags: iptables,second_node_join
 
 - name: add etcd to cluster
   shell: "kubectl exec -n kube-system etcd-{{ hostvars[groups['master-0'][0]].ansible_hostname }} -- etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --endpoints=https://{{ hostvars[groups['master-0'][0]].ansible_default_ipv4.address }}:2379 member add {{ ansible_hostname }} https://{{ ansible_default_ipv4.address }}:2380"
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+  tags: second_node_join
 
 - name: write etcd manifest
   shell: kubeadm alpha phase etcd local --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/manifests/etcd.yaml
+  tags: second_node_join
 
 - name: write controlplane configs
   shell: kubeadm alpha phase kubeconfig all --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/controller-manager.conf
+  tags: second_node_join
 
 - name: write controlplane manifests
   shell: kubeadm alpha phase controlplane all --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/manifests/kube-controller-manager.yaml
+  tags: second_node_join
 
 - name: Open ports in iptables
   iptables_raw:
@@ -37,10 +41,12 @@
     rules: |
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
-  tags: iptables
+  tags: iptables,second_node_join
 
 - name: uploading cri socket annotation
   shell: kubeadm alpha phase kubelet config annotate-cri --config /tmp/kubeadm-config.yaml
+  tags: second_node_join
 
 - name: mark the node as master
   shell: kubeadm alpha phase mark-master --config /tmp/kubeadm-config.yaml
+  tags: second_node_join
