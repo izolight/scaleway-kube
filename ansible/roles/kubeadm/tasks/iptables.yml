@@ -75,6 +75,7 @@
     - KUBE-EXTERNAL-SERVICES
     - KUBE-SERVICES
     - KUBE-FORWARD
+  tags: iptables
 
 - name: add jump to kubernetes chains
   iptables_raw:
@@ -84,7 +85,7 @@
     rules: |
       -A INPUT -m conntrack --ctstate NEW -m comment --comment "kubernetes externally-visible service portals" -j KUBE-EXTERNAL-SERVICES
       -A OUTPUT -m conntrack --ctstate NEW -m comment --comment "kubernetes service portals" -j KUBE-SERVICES
-
+  tags: iptables
 
 - name: add jump to kubernetes chains
   iptables_raw:
@@ -95,3 +96,4 @@
       -A INPUT -j KUBE-FIREWALL
       -A FORWARD -m comment --comment "kubernetes forwarding rules" -j KUBE-FORWARD
       -A OUTPUT -j KUBE-FIREWALL
+  tags: iptables

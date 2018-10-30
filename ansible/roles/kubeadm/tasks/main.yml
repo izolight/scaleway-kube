@@ -1,6 +1,7 @@
 ---
 - name: add firewall rules
   include_tasks: iptables.yml
+  tags: iptables
 
 - name: copy kubeadm config
   template:
