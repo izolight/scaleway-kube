@@ -1,5 +1,7 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
+apiEndpoint:
+  advertiseAddress: {{ ansible_default_ipv4.address }}
 nodeRegistration:
 {% if CONTAINER_RUNTIME == 'containerd' %}
   criSocket: /run/containerd/containerd.sock
@@ -7,6 +9,7 @@ nodeRegistration:
   criSocket: /run/crio/crio.sock
 {% endif %}
 ---
+kind: ClusterConfiguration
 apiServerCertSANs:
 - "{{ LB_DNS }}"
 apiVersion: kubeadm.k8s.io/v1alpha3
@@ -36,7 +39,6 @@ etcd:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
       - {{ ansible_default_ipv4.address }}
-kind: ClusterConfiguration
 kubernetesVersion: v1.12.1
 networking:
   serviceSubnet: "{{ SERVICE_SUBNET }}"
