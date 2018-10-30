@@ -1,4 +1,14 @@
 ---
+- name: Open ports in iptables
+  iptables_raw:
+    name: wireguard_open_ports
+    state: present
+    weight: 1
+    rules: |
+      -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
+      -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
+  tags: iptables
+
 - name: add etcd to cluster
   shell: "kubectl exec -n kube-system etcd-{{ hostvars[groups['master-0'][0]].ansible_hostname }} -- etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --endpoints=https://{{ hostvars[groups['master-0'][0]].ansible_default_ipv4.address }}:2379 member add {{ ansible_hostname }} https://{{ ansible_default_ipv4.address }}:2380"
   environment:
@@ -19,21 +29,15 @@
   args:
     creates: /etc/kubernetes/manifests/kube-controller-manager.yaml
 
-- name: ensure incoming wireguard iptables still works
-  iptables:
-    action: insert
-    chain: INPUT
-    protocol: udp
-    destination_port: 54321
-    jump: ACCEPT
-
-- name: ensure outgoing wireguard iptables still works
-  iptables:
-    action: insert
-    chain: OUTPUT
-    protocol: udp
-    destination_port: 54321
-    jump: ACCEPT
+- name: Open ports in iptables
+  iptables_raw:
+    name: wireguard_open_ports
+    state: present
+    weight: 1
+    rules: |
+      -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
+      -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
+  tags: iptables
 
 - name: uploading cri socket annotation
   shell: kubeadm alpha phase kubelet config annotate-cri --config /tmp/kubeadm-config.yaml

@@ -29,7 +29,7 @@
   iptables_raw:
     name: kubelet-api
     state: present
-    weight: 15
+    weight: 16
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 10250 -j ACCEPT
@@ -42,7 +42,7 @@
   iptables_raw:
     name: kube-scheduler
     state: present
-    weight: 15
+    weight: 16
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 10251 -j ACCEPT
@@ -55,7 +55,7 @@
   iptables_raw:
     name: kube-controller-manager
     state: present
-    weight: 15
+    weight: 16
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 10252 -j ACCEPT
@@ -63,3 +63,35 @@
     - 4
     - 6
   tags: iptables
+
+- name: add kubernetes chains
+  iptables_raw:
+    name: add_kubernetes_chains
+    state: present
+    weight: 20
+    rules: "-N {{ item }}"
+  loop:
+    - KUBE-FIREWALL
+    - KUBE-EXTERNAL-SERVICES
+    - KUBE-SERVICES
+    - KUBE-FORWARD
+
+- name: add jump to kubernetes chains
+  iptables_raw:
+    name: kubernetes_chains_
+    state: present
+    weight: 98
+    rules: |
+      -A INPUT -m conntrack --ctstate NEW -m comment --comment "kubernetes externally-visible service portals" -j KUBE-EXTERNAL-SERVICES
+      -A OUTPUT -m conntrack --ctstate NEW -m comment --comment "kubernetes service portals" -j KUBE-SERVICES
+
+
+- name: add jump to kubernetes chains
+  iptables_raw:
+    name: kubernetes_catch_chains
+    state: present
+    weight: 99
+    rules: |
+      -A INPUT -j KUBE-FIREWALL
+      -A FORWARD -m comment --comment "kubernetes forwarding rules" -j KUBE-FORWARD
+      -A OUTPUT -j KUBE-FIREWALL
