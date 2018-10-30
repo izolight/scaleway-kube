@@ -31,3 +31,18 @@
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
   run_once: true
+
+- name: enable fw rules for apiserver
+  iptables_raw:
+    name: weavenet
+    state: present
+    weight: 20
+    ipversion: "{{ item }}"
+    rules: |
+      -A TCP -p tcp --dport 6783 -j ACCEPT
+      -A UDP -p udp --dport 6783 -j ACCEPT
+      -A UDP -p udp --dport 6784 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
