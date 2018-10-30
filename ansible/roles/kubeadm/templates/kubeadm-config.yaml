@@ -1,7 +1,7 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
 apiEndpoint:
-  advertiseAddress: {{ ansible_default_ipv4.address }}
+  advertiseAddress: {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}
 nodeRegistration:
 {% if CONTAINER_RUNTIME == 'containerd' %}
   criSocket: /run/containerd/containerd.sock
@@ -17,16 +17,16 @@ controlPlaneEndpoint: "{{ LB_DNS }}:{{ APISERVER_PORT }}"
 etcd:
   local:
     extraArgs:
-      listen-client-urls: "https://127.0.0.1:2379,https://{{ ansible_default_ipv4.address }}:2379"
-      advertise-client-urls: "https://{{ ansible_default_ipv4.address }}:2379"
-      listen-peer-urls: "https://{{ ansible_default_ipv4.address }}:2380"
-      initial-advertise-peer-urls: "https://{{ ansible_default_ipv4.address }}:2380"
+      listen-client-urls: "https://127.0.0.1:2379,https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2379"
+      advertise-client-urls: "https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2379"
+      listen-peer-urls: "https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2380"
+      initial-advertise-peer-urls: "https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2380"
 {% if inventory_hostname in groups['master-0'] %}
-      initial-cluster: "{{ ansible_hostname }}=https://{{ ansible_default_ipv4.address }}:2380"
+      initial-cluster: "{{ ansible_hostname }}=https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2380"
 {% elif inventory_hostname in groups['master-1'] %}
-      initial-cluster: "{{ hostvars[groups['master-0'][0]].ansible_hostname }}=https://{{ hostvars[groups['master-0'][0]].ansible_default_ipv4.address }}:2380,{{ ansible_hostname }}=https://{{ ansible_default_ipv4.address }}:2380"
+      initial-cluster: "{{ hostvars[groups['master-0'][0]].ansible_hostname }}=https://{{ WIREGUARD_SUBNET }}.{{ hostvars[groups['master-0'][0]].vpn_ip }}:2380,{{ ansible_hostname }}=https://{{ WIREGUARD_SUBNET }}.{{ vpn_ip }}:2380"
 {% else %}
-      initial-cluster: "{% for h in groups['masters'] | sort %}{{ hostvars[h].ansible_hostname }}=https://{{ hostvars[h].ansible_default_ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+      initial-cluster: "{% for h in groups['masters'] | sort %}{{ hostvars[h].ansible_hostname }}=https://{{ WIREGUARD_SUBNET }}.{{ hostvars[h].vpn_ip }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
 {% endif %}
 {% if inventory_hostname not in groups['master-0'] %}
       initial-cluster-state: existing
@@ -34,12 +34,16 @@ etcd:
     serverCertSANs:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
-      - {{ ansible_default_ipv4.address }}
+      - {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}
     peerCertSANs:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
-      - {{ ansible_default_ipv4.address }}
+      - {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}
 kubernetesVersion: v1.12.1
 networking:
   serviceSubnet: "{{ SERVICE_SUBNET }}"
   podSubnet: "{{ POD_SUBNET }}"
+---
+kind: JoinConfiguration
+apiEndpoint:
+  advertiseAddress: {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}
