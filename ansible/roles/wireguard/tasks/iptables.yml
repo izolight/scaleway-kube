@@ -18,6 +18,7 @@
       -A FORWARD -i wg0 -j ACCEPT
       -A FORWARD -o wg0 -j ACCEPT
   tags: iptables
+  when: "'proxies' in group_names"
 
 - name: wireguard nat rules
   iptables_raw:
@@ -27,3 +28,4 @@
     table: nat
     rules: "-A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE"
   tags: iptables
+  when: "'proxies' in group_names"
