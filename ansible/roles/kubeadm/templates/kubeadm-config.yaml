@@ -32,10 +32,12 @@ etcd:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
       - {{ ansible_default_ipv4.address }}
+      - {{ ansible_ens2.ipv4.address }}
     peerCertSANs:
       - {{ ansible_hostname }}
       - {{ inventory_hostname }}
       - {{ ansible_default_ipv4.address }}
+      - {{ ansible_ens2.ipv4.address }}
 kind: ClusterConfiguration
 kubernetesVersion: v1.12.1
 networking:
