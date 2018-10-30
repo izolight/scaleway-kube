@@ -7,7 +7,7 @@ custom_chains: |
 
 default_policies: |
   -P INPUT DROP
-  -P FORWARD DROP
+  -P FORWARD ACCEPT
   -P OUTPUT ACCEPT
 
 default_rules_head: |
@@ -19,7 +19,7 @@ default_rules_head: |
 
 default_rules_head_v4: |
   {{ default_rules_head }}
-  -A INPUT -p icmp -m conntrack --ctstate NEW -j ICMP
+  -A INPUT -p icmp -j ICMP
 
 default_rules_head_v6: |
   -A INPUT -d ff00::/8 -j ACCEPT
