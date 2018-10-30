@@ -3,31 +3,31 @@
   shell: kubeadm alpha phase certs all --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/pki/etcd/server.crt
-  tags: second_node
+  tags: second_node,third_node
 
 - name: generate kubelet config
   shell: kubeadm alpha phase kubelet config write-to-disk --config /tmp/kubeadm-config.yaml
   args:
     creates: /var/lib/kubelet/config.yaml
-  tags: second_node
+  tags: second_node,third_node
 
 - name: generate kubelet env
   shell: kubeadm alpha phase kubelet write-env-file --config /tmp/kubeadm-config.yaml
   args:
     creates: /var/lib/kubelet/kubeadm-flags.env
-  tags: second_node
+  tags: second_node,third_node
 
 - name: generate kubelet kubeconfig
   shell: kubeadm alpha phase kubeconfig kubelet --config /tmp/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/kubelet.conf
-  tags: second_node
+  tags: second_node,third_node
 
 - name: start kubelet
   systemd:
     name: kubelet
     state: restarted
-  tags: second_node
+  tags: second_node,third_node
 
 - name: Open ports in iptables
   iptables_raw:
@@ -37,4 +37,4 @@
     rules: |
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
-  tags: iptables,second_node
+  tags: iptables,second_node,third_node
