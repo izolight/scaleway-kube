@@ -9,10 +9,10 @@ nodeRegistration:
   criSocket: /run/crio/crio.sock
 {% endif %}
 ---
+apiVersion: kubeadm.k8s.io/v1alpha3
 kind: ClusterConfiguration
 apiServerCertSANs:
 - "{{ LB_DNS }}"
-apiVersion: kubeadm.k8s.io/v1alpha3
 controlPlaneEndpoint: "{{ LB_DNS }}:{{ APISERVER_PORT }}"
 etcd:
   local:
@@ -44,6 +44,7 @@ networking:
   serviceSubnet: "{{ SERVICE_SUBNET }}"
   podSubnet: "{{ POD_SUBNET }}"
 ---
+apiVersion: kubeadm.k8s.io/v1alpha3
 kind: JoinConfiguration
 apiEndpoint:
   advertiseAddress: {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}
