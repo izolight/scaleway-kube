@@ -10,6 +10,7 @@
     name: protocol_chains
     state: present
     rules: "{{ custom_chains }}"
+    keep_unmanaged: no
     ipversion: "{{ item }}"
   loop:
     - 4
@@ -21,6 +22,7 @@
     weight: 10
     state: present
     rules: "{{ item.rule }}"
+    keep_unmanaged: no
     ipversion: "{{ item.v }}"
   loop:
     - { v: 4, rule: "{{ default_rules_head_v4 }}" }
@@ -32,6 +34,7 @@
     weight: 10
     state: present
     rules: "{{ default_icmp_flood }}"
+    keep_unmanaged: no
     ipversion: "{{ item }}"
   loop:
     - 4
@@ -43,6 +46,7 @@
     weight: 11
     state: present
     rules: "{{ item.rule }}"
+    keep_unmanaged: no
     ipversion: "{{ item.v }}"
   loop:
     - { v: 4, rule: "{{ default_rules_fake_v4 }}" }
@@ -54,6 +58,7 @@
     weight: 10
     state: present
     rules: "{{ default_tcp }}"
+    keep_unmanaged: no
     ipversion: "{{ item }}"
   loop:
     - 4
@@ -65,6 +70,7 @@
     weight: 10
     state: present
     rules: "{{ item.rule }}"
+    keep_unmanaged: no
     ipversion: "{{ item.v }}"
   loop:
     - { v: 4, rule: "{{ default_udp_v4 }}" }
@@ -76,6 +82,7 @@
     weight: 10
     state: present
     rules: "{{ item.rule }}"
+    keep_unmanaged: no
     ipversion: "{{ item.v }}"
   loop:
     - { v: 4, rule: "{{ default_icmp_v4 }}" }
@@ -86,6 +93,7 @@
     name: default_policies
     state: present
     rules: "{{ default_policies }}"
+    keep_unmanaged: no
     ipversion: "{{ item }}"
   loop:
     - 4

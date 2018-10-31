@@ -38,6 +38,7 @@
     state: present
     weight: 20
     ipversion: "{{ item }}"
+    keep_unmanaged: no
     rules: |
       -A TCP -p tcp --dport 6783 -j ACCEPT
       -A UDP -p udp --dport 6783 -j ACCEPT

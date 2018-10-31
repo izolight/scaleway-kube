@@ -4,6 +4,7 @@
     name: wireguard_open_ports
     state: present
     weight: 1
+    keep_unmanaged: no
     rules: |
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
@@ -38,6 +39,7 @@
     name: wireguard_open_ports
     state: present
     weight: 1
+    keep_unmanaged: no
     rules: |
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT

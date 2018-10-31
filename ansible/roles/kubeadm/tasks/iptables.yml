@@ -4,6 +4,7 @@
     name: kube-apiserver
     state: present
     weight: 15
+    keep_unmanaged: no
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 6443 -j ACCEPT
@@ -17,6 +18,7 @@
     name: etcd
     state: present
     weight: 15
+    keep_unmanaged: no
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 2379:2380 -j ACCEPT
@@ -30,6 +32,7 @@
     name: kubelet-api
     state: present
     weight: 16
+    keep_unmanaged: no
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 10250 -j ACCEPT

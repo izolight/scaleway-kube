@@ -14,6 +14,7 @@
     name: kube-apiserver
     state: present
     weight: 15
+    keep_unmanaged: no
     ipversion: "{{ item }}"
     rules: |
       -A TCP -p tcp --dport 6443 -j ACCEPT
