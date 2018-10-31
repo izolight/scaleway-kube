@@ -32,9 +32,9 @@
 - hosts: masters
   vars_files: group_vars/private.yml
   roles:
-    - { role: ssh, tags: ["kubernetes", "etcd", "ssh"] }
-    - { role: kubeadm, tags: ["kubernetes", "kubeadm"] }
-    - { role: weave, tags: ["kubernetes", "weave"] }
+    - { role: ssh, tags: ["bootstrap", "etcd", "ssh"] }
+    - { role: kubeadm, tags: ["bootstrap", "kubeadm"] }
+    - { role: weave, tags: ["bootstrap", "weave"] }
 
 - hosts: etcd
   roles:
