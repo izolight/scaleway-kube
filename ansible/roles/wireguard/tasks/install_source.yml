@@ -6,7 +6,7 @@
       - libmnl-dev
       - libelf-dev
       - pkg-config
-      - "linux-headers-{{ ansible_kernel }}"
+      - linux-headers-generic
     state: latest
     update_cache: yes
 
