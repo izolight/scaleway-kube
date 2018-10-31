@@ -27,7 +27,7 @@
     replace: "              command:\n                 - \/home\/weave\/launch.sh\n\              env:\n\                - name: IPALLOC_RANGE\n                  value: {{ SERVICE_SUBNET }}\n                - name: HOSTNAME"
 
 - name: apply weave net
-  shell: kubectl replace -f /tmp/weave.yaml
+  shell: kubectl apply -f /tmp/weave.yaml
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
   run_once: true
