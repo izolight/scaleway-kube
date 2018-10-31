@@ -63,16 +63,3 @@
     - 4
     - 6
   tags: iptables
-
-- name: add kubernetes chains
-  iptables_raw:
-    name: add_kubernetes_chains
-    state: present
-    weight: 20
-    rules: "-N {{ item }}"
-  loop:
-    - KUBE-FIREWALL
-    - KUBE-EXTERNAL-SERVICES
-    - KUBE-SERVICES
-    - KUBE-FORWARD
-  tags: iptables
