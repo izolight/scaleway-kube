@@ -29,6 +29,10 @@
     - { role: containerd, when: CONTAINER_RUNTIME == 'containerd', tags: ["kubernetes", "runtime"] }
     - { role: kube-tools, tags: ["kubernetes", "kube-tools"] }
     - { role: ssh, tags: ["kubernetes", "etcd", "ssh"] }
+
+- hosts: masters
+  vars_files: group_vars/private.yml
+  roles:
     - { role: kubeadm, tags: ["kubernetes", "kubeadm"] }
     - { role: weave, tags: ["kubernetes", "weave"] }
 
