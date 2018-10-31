@@ -16,6 +16,11 @@
     - { role: update, tags: ["update"], serial: "30%" }
     - { role: fakedns, when: env == 'local', tags: ["fakedns"] }
 
+- hosts: proxies
+  vars_files: group_vars/private.yml
+  roles:
+    - { role: haproxy, tags: ["haproxy"] }
+
 - hosts: kube-hosts
   vars_files: group_vars/private.yml
   roles:
@@ -30,8 +35,3 @@
 - hosts: etcd
   roles:
     - { role: etcd, tags: ["etcd"] } # use this if doing a external etcd cluster
-
-- hosts: proxies
-  vars_files: group_vars/private.yml
-  roles:
-    - { role: haproxy, tags: ["haproxy"] }
