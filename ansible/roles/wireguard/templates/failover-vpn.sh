@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # check if vpn works
-ping -c 1 1.1.1.1
+ping -c 1 1.1.1.1 > /dev/null
 
 RESULT=$?
 
