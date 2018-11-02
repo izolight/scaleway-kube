@@ -10,3 +10,12 @@
   file:
     path: /etc/apt/sources.list.d/scaleway-ubuntu-stable-xenial.list
     state: absent
+
+- name: get default route for private subnet
+  shell: "ip r |grep default|awk '{ print $3 }'"
+  register: gateway
+
+- name: set static route to apipa
+  template:
+    dest: /etc/network/interfaces.d/60-apiparoute.cfg
+    src: apiparoute.cfg
