@@ -27,7 +27,6 @@
     src: tunnel.conf.j2
     dest: /etc/wireguard/tunnel_{{ idx }}.conf
     mode: 0600
-  when: "'proxies' not in group_names"
   loop: "{{ groups['proxies'] | sort }}"
   loop_control:
     index_var: idx
