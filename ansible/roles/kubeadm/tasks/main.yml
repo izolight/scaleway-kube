@@ -1,18 +1,4 @@
 ---
-- name: get default route for private subnet
-  shell: "ip r |grep default|awk '{ print $3 }'"
-  register: gateway
-  tags: iptables,initial_node
-
-- name: add route for 10.0.0.0/8
-  shell: "ip r del 10.0.0.0/8"
-  tags: iptables,initial_node
-  ignore_errors: true
-
-- name: add route for 10.0.0.0/8
-  shell: "ip r add 10.0.0.0/8 via {{ gateway.stdout }}"
-  tags: iptables,initial_node
-
 - name: add firewall rules
   include_tasks: iptables.yml
   tags: iptables,initial_node

@@ -30,14 +30,14 @@
   lineinfile:
     path: /etc/default/kubelet
     regexp: '^KUBELET_EXTRA_ARGS='
-    line: 'KUBELET_EXTRA_ARGS=--cgroup-driver=cgroupfs'
+    line: 'KUBELET_EXTRA_ARGS=--cgroup-driver=cgroupfs --node-ip={{ WIREGUARD_SUBNET}}.{{ vpn_ip }}'
   when: CONTAINER_RUNTIME != 'docker'
 
 - name: set cgroup driver
   lineinfile:
     path: /etc/default/kubelet
     regexp: '^KUBELET_EXTRA_ARGS='
-    line: 'KUBELET_EXTRA_ARGS=--cgroup-driver=systemd'
+    line: 'KUBELET_EXTRA_ARGS=--cgroup-driver=systemd --node-ip={{ WIREGUARD_SUBNET}}.{{ vpn_ip }}'
   when: CONTAINER_RUNTIME == 'docker'
 
 - name: preserve firewall rules
