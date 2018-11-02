@@ -42,13 +42,12 @@
 
 - name: preserve firewall rules
   copy:
-    src: 30-wireguard-iptables.conf
-    dest: /etc/systemd/system/kubelet.service.d/
+    src: wireguard-iptables.service
+    dest: /etc/systemd/system/
 
-- name: restart kubelet
+- name: enable systemd service for preserving firewall rules
   systemd:
-    name: kubelet
+    name: wireguard-iptables.service
     state: restarted
     enabled: yes
     daemon-reload: yes
-  serial: "30%"
