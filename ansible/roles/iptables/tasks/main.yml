@@ -98,3 +98,29 @@
   loop:
     - 4
     - 6
+
+- name: enable fw rules for weave
+  iptables_raw:
+    name: weavenet
+    state: present
+    weight: 20
+    ipversion: "{{ item }}"
+    keep_unmanaged: no
+    rules: |
+      -A TCP -p tcp --dport 6783 -j ACCEPT
+      -A UDP -p udp --dport 6783 -j ACCEPT
+      -A UDP -p udp --dport 6784 -j ACCEPT
+  loop:
+    - 4
+    - 6
+  tags: iptables
+
+- name: enable fw rules for kubelet-api
+  iptables_raw:
+    name: kubelet-api
+    state: present
+    weight: 16
+    keep_unmanaged: no
+    rules: |
+      -A TCP -p tcp --dport 10250 -s 172.16.0.0/12,192.168.100.0/24 -j ACCEPT
+  tags: iptables
