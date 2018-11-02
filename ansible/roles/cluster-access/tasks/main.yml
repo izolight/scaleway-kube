@@ -29,3 +29,17 @@
   copy:
     content: "{{ CERT.stdout }}"
     dest: "/home/{{ USER }}/.kube/{{ USER }}.crt"
+
+- name: get ca
+  shell: kubectl config view --minify=true --flatten -o json | jq '.clusters[0].cluster."certificate-authority-data"' -r
+  register: CA
+
+- name: read key
+  slurp:
+    src: "/home/{{ USER }}/.kube/{{ USER }}.key"
+  register: KEY
+
+- name: create kubeconfig file
+  template:
+    src: kubeconfig.yaml
+    dest: "/home/{{ USER }}/.kube/config-{{ USER }}"
