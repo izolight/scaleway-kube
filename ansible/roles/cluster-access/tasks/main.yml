@@ -43,3 +43,13 @@
   template:
     src: kubeconfig.yaml
     dest: "/home/{{ USER }}/.kube/config-{{ USER }}"
+
+- name: add clusterwide view for {{ USER }}
+  k8s:
+    definition: "{{ lookup('template', 'clusterrolebinding.yaml') }}"
+  tags: cluster-access-permissions
+
+- name: add edit on default for {{ USER }}
+  k8s:
+    definition: "{{ lookup('template', 'rolebinding.yaml') }}"
+  tags: cluster-access-permissions
