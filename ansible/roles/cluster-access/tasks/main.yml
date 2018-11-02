@@ -1,0 +1,31 @@
+---
+- name: generate privatekey for user {{ USER }}
+  openssl_privatekey:
+    path: "/home/{{ USER }}/.kube/{{ USER }}.key"
+
+- name: create csr for {{ USER }}
+  openssl_csr:
+    path: "/home/{{ USER }}/.kube/{{ USER }}.csr"
+    privatekey_path: "/home/{{ USER }}/.kube/{{ USER }}.key"
+    common_name: "{{ USER }}"
+
+- name: read in the csr
+  slurp:
+    src: "/home/{{ USER }}/.kube/{{ USER }}.csr"
+  register: CSR
+
+- name: submit csr to cluster
+  k8s:
+    definition: "{{ lookup('template', 'csr.yaml') }}"
+
+- name: approve the csr
+  shell: "kubectl certificate approve user-request-{{ USER }}"
+
+- name: get certificate
+  shell: "kubectl get csr user-request-{{ USER }} -o jsonpath='{.status.certificate}' | base64 -d"
+  register: CERT
+
+- name: create cert file
+  copy:
+    content: "{{ CERT.stdout }}"
+    dest: "/home/{{ USER }}/.kube/{{ USER }}.crt"

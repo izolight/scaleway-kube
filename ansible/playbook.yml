@@ -39,3 +39,8 @@
 - hosts: etcd
   roles:
     - { role: etcd, tags: ["etcd"] } # use this if doing a external etcd cluster
+
+- hosts: localhost
+  vars_files: group_vars/private.yml
+  roles:
+    - { role: cluster-access, tags: ["cluster-access"] }
