@@ -18,14 +18,16 @@
 
 - name: configure wireguard
   include_tasks: config.yml
+  tags: wireguard-config
 
 - name: setup failover for clients
   include_tasks: failover.yml
   when: "'proxies' not in group_names"
+  tags: wireguard-config
 
 - name: setup iptables rules
   include_tasks: iptables.yml
-  tags: iptables
+  tags: iptables, wireguard-config
 
 - name: enable wireguard endpoints
   systemd:
@@ -34,6 +36,7 @@
     daemon-reload: yes
     enabled: yes
   when: "'proxies' in group_names"
+  tags: wireguard-config
 
 - name: enable wireguard clients
   systemd:
@@ -42,4 +45,4 @@
     daemon-reload: yes
     enabled: yes
   when: "'proxies' not in group_names"
-
+  tags: wireguard-config

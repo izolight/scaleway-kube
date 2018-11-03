@@ -4,16 +4,19 @@
   args:
     chdir: /etc/wireguard
     creates: privatekey
+  tags: wireguard-config
 
 - name: get public keys
   slurp:
     src: /etc/wireguard/publickey
   register: public_key
+  tags: wireguard-config
 
 - name: get private keys
   slurp:
     src: /etc/wireguard/privatekey
   register: private_key
+  tags: wireguard-config
 
 - name: create endpoint config
   template:
@@ -21,6 +24,7 @@
     dest: /etc/wireguard/wg0.conf
     mode: 0600
   when: "'proxies' in group_names"
+  tags: wireguard-config
 
 - name: create client config for normal clients
   template:
@@ -31,6 +35,7 @@
   loop_control:
     index_var: idx
   when: "'proxies' not in group_names"
+  tags: wireguard-config
 
 - name: create client config for endpoints
   template:
@@ -39,3 +44,4 @@
     mode: 0600
   loop: "{{ groups['proxies'] }}"
   when: "'proxies' in group_names and item != inventory_hostname"
+  tags: wireguard-config
