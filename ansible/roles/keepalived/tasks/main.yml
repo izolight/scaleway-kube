@@ -1,0 +1,38 @@
+---
+- name: Creating directory for scaleway-ipmove
+  file:
+    path: /usr/local/bin/scaleway-ipmove
+    state: directory
+
+- name: install required package
+  apt:
+    name: git
+    state: present
+    update-cache: yes
+
+- name: Getting scaleway-ipmove.py
+  git:
+    repo: https://github.com/chmod666org/scaleway-ipmove
+    dest: /usr/local/bin/scaleway-ipmove
+    force: yes
+
+- name: add notify.sh
+  template:
+    src: notify.sh.j2
+    dest: /usr/local/bin/scaleway-ipmove/notify.sh
+    mode: 0500
+    owner: root
+    group: root
+
+- name: add wireguard configs
+  shell: "cp -r {{ item }} /usr/local/bin/scaleway-ipmove/"
+  loop:
+    - /etc/wireguard/active
+    - /etc/wireguard/passive
+
+- name: Templating keepalived on proxy node
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { 'src': 'keepalived.yml.j2', 'dest': '/tmp/keepalived.yml' }

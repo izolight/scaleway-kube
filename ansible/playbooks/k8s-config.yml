@@ -4,3 +4,8 @@
   roles:
     - { role: cluster-access, tags: ["cluster-access"] }
     - { role: k8s-setup, tags: ["k8s-setup"] }
+
+- hosts: proxies
+  vars_files: ../group_vars/private.yml
+  roles:
+    - { role: keepalived, tags: ["keepalived"] }
