@@ -3,9 +3,9 @@
   iptables_raw:
     name: wireguard_open_ports
     state: present
-    weight: 15
-    keep_unmanaged: no
+    weight: 1
     rules: |
+      -A INPUT -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A UDP -p udp --dport {{ WIREGUARD_PORT }} -j ACCEPT
       -A OUTPUT -p udp --sport {{ WIREGUARD_PORT }} -j ACCEPT
   tags: iptables
@@ -15,7 +15,6 @@
     name: wireguard_forwarding
     state: present
     weight: 10
-    keep_unmanaged: no
     rules: |
       -A FORWARD -i wg0 -j ACCEPT
       -A FORWARD -o wg0 -j ACCEPT
@@ -27,7 +26,6 @@
     name: wireguard_nat
     state: present
     weight: 10
-    keep_unmanaged: no
     table: nat
     rules: "-A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE"
   tags: iptables
