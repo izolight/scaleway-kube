@@ -22,7 +22,7 @@
     mode: 0600
   when: "'proxies' in group_names"
 
-- name: create client config
+- name: create client config for normal clients
   template:
     src: tunnel.conf.j2
     dest: /etc/wireguard/tunnel_{{ idx }}.conf
@@ -30,3 +30,12 @@
   loop: "{{ groups['proxies'] | sort }}"
   loop_control:
     index_var: idx
+  when: "'proxies' not in group_names"
+
+- name: create client config for endpoints
+  template:
+    src: tunnel.conf.j2
+    dest: /etc/wireguard/tunnel_0.conf
+    mode: 0600
+  loop: "{{ groups['proxies'] }}"
+  when: "'proxies' in group_names and item != inventory_hostname"
