@@ -1,5 +1,5 @@
 [Interface]
-Address = {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}/24
+Address = {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}/24,{{ WIREGUARD_SUBNET }}.3/24
 ListenPort = {{ WIREGUARD_PORT }}
 PrivateKey = {{ private_key.content | b64decode | trim }}
 {% for h in groups['all'] | sort %}

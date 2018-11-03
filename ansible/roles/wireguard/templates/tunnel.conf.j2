@@ -6,4 +6,4 @@ PrivateKey = {{ private_key.content | b64decode | trim }}
 [Peer]
 PublicKey = {{ hostvars[item].public_key.content | b64decode | trim }}
 AllowedIPs = 0.0.0.0/0
-Endpoint = {{ hostvars[item].ansible_default_ipv4.address }}:{{ WIREGUARD_PORT }}
+Endpoint = {{ hostvars[item].ansible_ens2.ipv4.address }}:{{ WIREGUARD_PORT }}
