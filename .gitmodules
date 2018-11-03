@@ -1,3 +1,6 @@
 [submodule "ansible/library"]
 	path = ansible/library
 	url = git@github.com:Nordeus/ansible_iptables_raw.git
+[submodule "ansible/playbooks/library"]
+	path = ansible/playbooks/library
+	url = git@github.com:Nordeus/ansible_iptables_raw.git
