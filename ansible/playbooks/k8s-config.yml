@@ -1,6 +1,6 @@
 ---
 - hosts: localhost
-  vars_files: group_vars/private.yml
+  vars_files: ../group_vars/private.yml
   roles:
     - { role: cluster-access, tags: ["cluster-access"] }
     - { role: k8s-setup, tags: ["k8s-setup"] }

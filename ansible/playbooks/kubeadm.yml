@@ -2,7 +2,7 @@
 import-playbook: setup.yml
 import-playbook: kube-prepare.yml
 - hosts: masters
-  vars_files: group_vars/private.yml
+  vars_files: ../group_vars/private.yml
   roles:
     - { role: ssh, tags: ["bootstrap", "etcd", "ssh"] }
     - { role: kubeadm, tags: ["bootstrap", "kubeadm"] }

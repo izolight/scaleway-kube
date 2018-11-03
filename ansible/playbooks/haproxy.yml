@@ -1,7 +1,7 @@
 ---
 import_playbook: setup.yml
 - hosts: proxies
-  vars_files: group_vars/private.yml
+  vars_files: ../group_vars/private.yml
   roles:
     - { role: haproxy, tags: ["haproxy"] }
 
