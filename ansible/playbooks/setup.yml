@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars_files: group_vars/private.yml
+  roles:
+    - { role: common, tags: ["common"] }
+    - { role: iptables, tags: ["iptables"] }
+    - { role: wireguard, tags: ["wireguard"] }
+    - { role: update, tags: ["update"], serial: "30%" }
+    - { role: fakedns, when: env == 'local', tags: ["fakedns"] }

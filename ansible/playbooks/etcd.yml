@@ -1,0 +1,7 @@
+---
+- import_playbook: setup.yml
+- import_playbook: kube-prepare.yml
+- hosts: etcd
+  roles:
+    - { role: etcd, tags: ["etcd"] } # use this if doing a external etcd cluster
+

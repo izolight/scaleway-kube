@@ -1,0 +1,8 @@
+---
+- hosts: proxies
+  roles:
+    - { role: router, when: env == 'local', tags: ["router"] }
+
+- hosts: masters
+  roles:
+    - { role: natted, when: env == 'local', tags: ["router"] }
