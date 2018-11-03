@@ -3,8 +3,9 @@ Address = {{ WIREGUARD_SUBNET }}.{{ vpn_ip }}/24
 ListenPort = {{ WIREGUARD_PORT }}
 PrivateKey = {{ private_key.content | b64decode | trim }}
 {% for h in groups['all'] | sort %}
-
+{% if h != inventory_hostname %}
 [Peer]
 PublicKey = {{ hostvars[h].public_key.content | b64decode | trim}}
 AllowedIPs = {{ WIREGUARD_SUBNET }}.{{ hostvars[h].vpn_ip }}/32
+{% endif %}
 {% endfor %}
