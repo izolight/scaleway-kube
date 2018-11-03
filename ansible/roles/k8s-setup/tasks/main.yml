@@ -1,0 +1,6 @@
+---
+- name: set labels for ingress nodes
+  shell: "kubectl label nodes {{ item }} node-role.kubernetes.io/ingress= --overwrite"
+  loop:
+    - lb-0
+    - lb-1
