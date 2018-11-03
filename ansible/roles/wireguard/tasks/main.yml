@@ -16,6 +16,11 @@
   include_tasks: install_ppa.yml
   when: COMPILE_WIREGUARD == false
 
+- name: check if host has public ip
+  shell: scw-metadata|grep PUBLIC_IP_ADDRESS
+  register: PUBLIC_IP
+  ignore_errors: true
+
 - name: configure wireguard
   include_tasks: config.yml
   tags: wireguard-config
@@ -35,7 +40,7 @@
     state: restarted
     daemon-reload: yes
     enabled: yes
-  when: "'proxies' in group_names"
+  when: "PUBLIC_IP.rc == 0"
   tags: wireguard-config
 
 - name: enable wireguard clients
@@ -44,5 +49,5 @@
     state: restarted
     daemon-reload: yes
     enabled: yes
-  when: "'proxies' not in group_names"
+  when: "PUBLIC_IP.rc == 1"
   tags: wireguard-config
