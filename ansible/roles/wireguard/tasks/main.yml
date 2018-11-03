@@ -19,6 +19,7 @@
 - name: check if host has public ip
   shell: scw-metadata|grep PUBLIC_IP_ADDRESS
   register: PUBLIC_IP
+  tags: wireguard-config
   ignore_errors: true
 
 - name: configure wireguard
