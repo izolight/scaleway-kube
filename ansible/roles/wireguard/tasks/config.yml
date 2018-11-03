@@ -18,10 +18,19 @@
   register: private_key
   tags: wireguard-config
 
+- name: create active/passive dirs
+  file:
+    state: directory
+    path: "/etc/wireguard/{{ item }}"
+  loop:
+    - active
+    - passive
+  tags: wireguard-config
+
 - name: create endpoint config
   template:
     src: wg0.conf.j2
-    dest: /etc/wireguard/wg0.conf
+    dest: /etc/wireguard/active/wg0.conf
     mode: 0600
   when: "'proxies' in group_names"
   tags: wireguard-config
@@ -40,7 +49,7 @@
 - name: create client config for endpoints
   template:
     src: tunnel.conf.j2
-    dest: /etc/wireguard/tunnel_0.conf
+    dest: /etc/wireguard/passive/wg0.conf
     mode: 0600
   loop: "{{ groups['proxies'] }}"
   when: "'proxies' in group_names and item != inventory_hostname"

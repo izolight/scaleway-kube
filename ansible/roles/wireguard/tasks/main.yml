@@ -35,13 +35,14 @@
   include_tasks: iptables.yml
   tags: iptables, wireguard-config
 
-- name: enable wireguard endpoints
-  systemd:
-    name: wg-quick@wg0
-    state: restarted
-    daemon-reload: yes
-    enabled: yes
-  when: "PUBLIC_IP.rc == 0"
+- name: enable wireguard endpoint active
+  shell: "wg-quick down /etc/wireguard/active/wg0.conf && wg-quick up /etc/wireguard/active/wg0.conf"
+  when: "PUBLIC_IP.rc == 0 and 'proxies' in group_names"
+  tags: wireguard-config
+
+- name: enable wireguard endpoint passive
+  shell: "wg-quick down /etc/wireguard/passive/wg0.conf && wg-quick up /etc/wireguard/passive/wg0.conf"
+  when: "PUBLIC_IP.rc == 1 and 'proxies' in group_names"
   tags: wireguard-config
 
 - name: enable wireguard clients
@@ -50,5 +51,5 @@
     state: restarted
     daemon-reload: yes
     enabled: yes
-  when: "PUBLIC_IP.rc == 1"
+  when: "'proxies' not in group_names"
   tags: wireguard-config
