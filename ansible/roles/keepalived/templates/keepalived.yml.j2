@@ -26,7 +26,7 @@ spec:
           - NET_ADMIN
     env:
       - name: KEEPALIVED_INTERFACE
-        value: tun0
+        value: wg0
       - name: KEEPALIVED_UNICAST_PEERS
         value: "#PYTHON2BASH:['{{ groups['proxies'] | map('extract', hostvars, ['vpn_ip']) | join("', '") }}']"
       - name: KEEPALIVED_PRIORITY
